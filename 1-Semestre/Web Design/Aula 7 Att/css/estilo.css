@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(9, 75, 9);
+    margin: 0;
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    border: solid 1px green;
+    display: flex;
+    flex-direction: column;
+}
+
+article {
+    margin: 20px 0;
+    padding: 20px;
+    border: solid 1px green;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer {
+    margin: 0px;
+    padding: 20px;
+    background-color: rgb(78, 78, 78);
+    position: relative;
+    bottom: 0;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+a{
+    position: fixed;
+    right: 60px;
+    bottom: 40px;
+}

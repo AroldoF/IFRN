@@ -1,0 +1,38 @@
+*{
+    box-sizing: border-box;
+    text-align: center;
+}
+h1,body{
+    margin: 0;
+    background-color: rgb(221, 213, 213);
+}
+header{
+    background-color: wheat;
+    margin: 0 0 10px 0;
+}
+p{
+    display: inline-block;
+    background-color: rgb(158, 156, 156);
+    margin: 10px 10px;
+    width: 20px;
+    padding: 0;
+    font-size: 22px;
+    border: solid 1px;
+}
+p:hover{
+    color: rgb(226, 216, 216);
+    cursor: pointer;
+}
+main{
+    width: 200px;
+    margin: auto;
+    background-color: rgb(221, 213, 213);
+}
+#calc{
+    background-color: rgb(184, 180, 180);
+}
+#result{
+    border: 0;
+    background-color: rgb(241, 237, 237);
+    margin: 15px 0;
+}

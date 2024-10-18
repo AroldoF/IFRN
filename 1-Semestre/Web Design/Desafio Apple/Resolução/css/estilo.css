@@ -1,0 +1,106 @@
+* {
+    box-sizing: border-box;
+    font-family: "Arial", "sans-serif";
+}
+
+body {
+    background-color: #FAFAFA;
+    margin: 0 0;
+}
+
+#redon {
+    width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    background-color: #444445;
+    padding: 0;
+    height: 48px;
+    margin: 0%;
+    padding: 0;
+}
+.letras{
+    color: #fafafa;
+}
+nav {
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.cabeçario {
+    padding: 3px 0 0 0;
+    margin: 0 2rem 0 2rem;
+    color: #A6B1B7; 
+}
+.cabeçario:hover{
+    color: white;
+}
+#apple {
+    display: block;
+    padding: 0;
+    margin: 0 2rem 0 2rem;
+    color: #A6B1B7; 
+}
+
+h1, h2{
+    text-align: center;
+    margin: 3.75rem 0 0.5rem 0;
+    font-size: 4.5rem;
+}
+#love{
+    text-align: center;
+    background-color: black;
+}
+.fundo{
+    background-color: black;
+    padding: 40px 0;
+    margin: 0;
+}
+a {
+    
+    display:inline;
+    text-decoration: none;
+    margin: 0.3125rem 0 0.3125rem 0;
+    color: #0066CC;
+}
+.vivali{
+    text-align: center;
+}
+
+.linkp{
+    text-align: center;
+    margin: 0.3125rem 0.9375rem 0.3125rem 0.9375rem;
+    font-size: 1.5rem;
+}
+ p {
+    text-align: center;
+    margin: 0.3125rem 0 0.3125rem 0;
+    font-size: 1.875rem;
+}
+footer{
+    background-color: #F5F5F7;
+    margin: 0;
+    height: 60px;
+    text-align: center;
+    justify-items: center;
+}
+#pp{
+    font-size: 1rem;
+    margin: 0;
+    color: #6E6E73;
+    padding-bottom: 5px;
+}
+.roda{
+    margin: 0 32px;
+    color: #424245;
+    padding: 0;
+}
+#ll{
+    justify-items: center;
+    align-items: center;
+    margin: 0 auto;
+    width: 890px;
+    padding-top: 10px;
+}

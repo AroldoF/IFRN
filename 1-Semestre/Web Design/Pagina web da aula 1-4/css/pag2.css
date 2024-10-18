@@ -1,0 +1,55 @@
+*{
+    box-sizing: border-box;
+}
+body {
+    background-color: rgb(235, 210, 210);
+    text-align: left;
+    font-size: 1.125rem;
+    font-family: "Montserrat", sans-serif;
+    width: 800px;
+    margin: 0 auto;
+}
+header{
+    background-color: rgb(182, 151, 151);
+    font-size: 22px;
+    border: solid 10px rgb(155, 126, 126);
+    box-shadow: 10px 15px rgb(119, 104, 104);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    border-radius: 10px;
+    overflow: auto;
+    }
+h1, h2,h3{
+    text-align: center;
+    margin: 50px auto;
+}
+#nome{
+    text-align: center;
+    margin: 10px 0 50px 0;
+}
+#velho{
+    margin: 0 300px;
+    border-radius: 500px;
+    border: solid 5px #000;
+    padding: 0;
+    box-shadow: 0 0;
+}
+img{
+    margin: 50px 0 0 50px;
+    box-shadow: 10px 15px rgb(65, 65, 65);
+    border: 10px solid rgba(0, 0, 0, 0.589);
+    border-radius: 15px;
+    padding: 0px;
+    background-color: rgba(0, 0, 0, 0.589);
+}
+a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+p{
+    text-align: center;
+}
+

@@ -1,0 +1,5 @@
+Matematica; 111; Todas
+Portugues;  112; Todas
+Fisica; 113; B
+Quimica; 114; A
+Artes; 128; A
