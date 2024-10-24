@@ -1,48 +1,56 @@
-class pessoas():
-    nome=''
-    idade=0
-    peso=0.0
-    altura=0.0
-    def envelhecer(self):
-    self.idade+=1
-    if self.idade>21:
-        print("Essa pessoa não crece mais!!")
-    else:
-        self.altura+=0.5
-    def engordar(self):
-    self.peso+=float(input("Quantos kg você engordou? "))
-    return self.peso
-    def emagrecer(self):
-    self.peso-=float(input("Quantos kg você emagreceu? "))
-    def crescer(self):
-    if self.idade>21:
-        print("Essa pessoa não crece mais!!")
-    else:
-        self.altura+=0.5
-def criar_pessoa():
-    nome=input("Digite seu nome: ")
-    idade=int(input("Digite sua idade: "))
-    peso=float(input("digite seu peso: "))
-    altura=float(input("digite sua altura: "))
-    pessoa=pessoas(nome,idade,altura,)
+class Conta:
+    def __init__(self, numero, titular, saldo, limite, codigo_Apo, nome_Apo):
+        self.numero = numero
+        self.titular = titular
+        self.saldo = saldo
+        self.limite = limite
+        self.codigo_Apo = codigo_Apo
+        self.nome_Apo = nome_Apo
 
-lista=[]
-while True:
-    r=int(input(": "))
-    #if r==9:
+    def deposita(self, valor):
+        self.saldo += valor
 
-    if r==1:
-        envelhecer(p1)
-        print(p1.idade)
-        print(p1.altura)
-    elif r==2:
-        engordar(p1)
-        print(p1.peso)
-    elif r==3:
-        emagrecer(p1)
-        print(p1.peso)
-    elif r==4:
-        crescer(p1)
-        print(p1.altura)
-    elif r==0:
-        break
+    def saca(self, valor):
+        if self.saldo < valor:
+            print("Você não tem saldo suficiente!")
+            return False
+        else:
+            self.saldo -= valor
+            return True
+
+    def extrato(self): 
+        print(f"Número: {self.numero}\nTitular: {self.titular}\nSaldo: {self.saldo}\nLimite: {self.limite}\nTipo de Conta: {self.nome_Apo}")
+
+    def transferir(self, valor, conta_destino):
+        if self.saca(valor):
+            conta_destino.deposita(valor)
+            print(f"Transferência de {valor} realizada para a conta {conta_destino.numero}.")
+        else:
+            print("Transferência não realizada devido a saldo insuficiente.")
+
+
+numero1 = input("Digite o número da primeira conta: ")
+titular1 = input("Digite o nome do titular da primeira conta: ")
+saldo1 = float(input("Digite o saldo inicial da primeira conta: "))
+limite1 = float(input("Digite o limite da primeira conta: "))
+codigo_Apo1 = input("Digite o código da conta (01 para Corrente, 02 para Poupança): ")
+nome_Apo1 = "Conta Corrente" if codigo_Apo1 == "01" else "Poupança"
+
+conta1 = Conta(numero1, titular1, saldo1, limite1, codigo_Apo1, nome_Apo1)
+
+numero2 = input("Digite o número da segunda conta: ")
+titular2 = input("Digite o nome do titular da segunda conta: ")
+saldo2 = float(input("Digite o saldo inicial da segunda conta: "))
+limite2 = float(input("Digite o limite da segunda conta: "))
+codigo_Apo2 = input("Digite o código da conta (01 para Corrente, 02 para Poupança): ")
+nome_Apo2 = "Conta Corrente" if codigo_Apo2 == "01" else "Poupança"
+
+conta2 = Conta(numero2, titular2, saldo2, limite2, codigo_Apo2, nome_Apo2)
+
+valor_transferencia = float(input("Digite o valor a ser transferido da primeira conta para a segunda: "))
+conta1.transferir(valor_transferencia, conta2)
+
+print("\nExtrato da Primeira Conta:")
+conta1.extrato()
+print("\nExtrato da Segunda Conta:")
+conta2.extrato()
