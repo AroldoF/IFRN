@@ -1,0 +1,7 @@
+Herança é um dos fundamentos de POO, assim como o proprio nome ja diz, na herança as classes filhos herdam codigos
+das classes pais. Exemplo, a classe veiculo pode ter como atributos cor, marca e modelo. a classe filha(moto) herdara todos
+atributos e tera seus proprios atributos como tipo de guidão.
+
+Polimorfismo tambem é um dos fundamentos de POO, é uma tecnica que faz com que diferentes entradas tenhão a 'mesma saida' 
+de maneira diferentes. Pegue como exemplo a função sort() do python, ela consegue organizar listas de diferentes tipagens:
+int, string... 

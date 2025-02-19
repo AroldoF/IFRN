@@ -1,0 +1,9 @@
+A sobrecarga de métodos ocorre quando uma classe possui mais de um método com o mesmo nome, mas com diferentes parâmetros.
+exemplo temos uma classe roupa() e temos 2 metodos costurar(float) e costurar(int) as duas possuem o mesmo nome, mas
+parametros diferentes.
+
+A sobrescrita de métodos ocorre quando uma classe_filho fornece a sua própria implementação para um método 
+herdado da classe_pai
+exemplo: temos uma classe funcionario() e ela tem um metodo bonus(valor). esse metodo da uma valor de bonus para o funcionario
+e numa classe_filho como recepcionista(valor), valor*3. ela utiliza da class hedadre e a modifica para ser mais especifica
+para sua função necessaria.
