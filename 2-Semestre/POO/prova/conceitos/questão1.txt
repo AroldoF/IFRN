@@ -1,0 +1,5 @@
+A| ocultar as funcionalidades como atributos e metodos de um código, utilizão 3 'estagios de proteção'
+public: todos podem acessar, no python e o padrão.
+private: única classe que tem acesso ao atributo é a própria classe que o define.
+protected: todas as classes que estiverem no mesmo pacote podem acessar a classe que possui o protected, mas
+tera uma flag avisando que esses dados são sensiveis.

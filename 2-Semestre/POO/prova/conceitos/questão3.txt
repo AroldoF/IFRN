@@ -1,0 +1,5 @@
+Uma classe é um template
+Um objeto é a instância personalizada da classe
+por exemplo o classe e veiculo()
+e o objeto sera fusca=veiculo()
+e a instancia de inicialização da classe.
