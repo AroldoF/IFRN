@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 01 — Apresentação, Ementa e Introdução aos SO | TADS — IFRN</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --if-verde:#2f9e41; --if-vermelho:#cd191e;
+  --ifrn-verde:#539839; --ifrn-vermelho:#b93120;
+  --bg:#ffffff; --bg2:#f5f7fa; --bg3:#edf0f5; --bg-dest:#e3ecfc;
+  --txt:#1e1e1e; --txt2:#444; --txt3:#666; --tit:#0d0d0d;
+  --ac:#1d5fc4; --ac2:#3b82f6; --verm:#c62828;
+  --verde:#16a34a; --amarelo:#b45309;
+  --brd:#cdd5e0; --rad:10px; --trans:0.3s ease;
+  --fonte:'Raleway',sans-serif; --mono:'Fira Code','Consolas',monospace;
+  --cab-h:78px; --sidebar-w:200px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--fonte);background:var(--bg);color:var(--txt);overflow:hidden;height:100vh;}
+::selection{background:var(--ac);color:#fff;}
+
+.barra-if{position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--if-verde) 0%,var(--if-verde) 85%,var(--if-vermelho) 85%);z-index:300;}
+.cab{position:fixed;top:4px;left:0;right:0;display:flex;align-items:center;gap:12px;padding:6px 20px;background:var(--bg2);border-bottom:1px solid var(--brd);z-index:200;height:calc(var(--cab-h) - 4px);}
+.cab img{height:50px;background:#fff;padding:2px 4px;border-radius:3px;}
+.cab .cnt{margin-left:auto;font-size:1.62rem;color:var(--txt3);font-weight:700;}
+.cab-breadcrumb{display:flex;align-items:center;gap:0;margin-left:4px;flex:1;min-width:0;}
+.cab-breadcrumb a{text-decoration:none;font-size:1.53rem;font-weight:600;color:var(--ac);transition:all var(--trans);padding:4px 10px;border-radius:6px;white-space:nowrap;}
+.cab-breadcrumb a:hover{background:rgba(29,95,196,.12);color:var(--ac2);}
+.cab-breadcrumb .sep{color:var(--txt3);font-size:1.44rem;margin:0 2px;user-select:none;}
+.cab-breadcrumb .current{font-size:1.53rem;font-weight:500;color:var(--txt2);white-space:nowrap;}
+
+.sidebar{position:fixed;left:0;top:var(--cab-h);width:var(--sidebar-w);height:calc(100vh - var(--cab-h));background:var(--bg2);border-right:1px solid var(--brd);padding:12px 0;overflow-y:auto;z-index:100;}
+.sidebar::-webkit-scrollbar{width:3px;} .sidebar::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:1.05rem;color:var(--txt3);cursor:pointer;transition:all var(--trans);border-left:3px solid transparent;font-weight:500;line-height:1.3;}
+.nav-item:hover{background:rgba(29,95,196,.07);color:var(--txt);}
+.nav-item.active{color:var(--ac);border-left-color:var(--ac);background:rgba(29,95,196,.1);font-weight:700;}
+.nav-item span{font-size:1.15rem;flex-shrink:0;}
+.nav-item .sub-count{margin-left:auto;font-size:.9rem;background:var(--brd);color:var(--txt2);padding:2px 7px;border-radius:10px;font-weight:700;min-width:22px;text-align:center;}
+.nav-item.active .sub-count{background:rgba(29,95,196,.2);color:var(--ac);}
+
+.progress{position:fixed;bottom:0;left:var(--sidebar-w);right:0;height:3px;background:var(--brd);z-index:200;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1e40af,var(--ac2));transition:width .4s ease;width:0%;}
+
+.nav-arrows{position:fixed;bottom:24px;right:28px;display:flex;align-items:center;gap:14px;z-index:200;}
+.nav-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--brd);background:var(--bg2);color:var(--txt);font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--trans);box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.nav-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(29,95,196,.1);box-shadow:0 4px 16px rgba(29,95,196,.2);}
+.nav-btn:active{transform:scale(.92);}
+.nav-btn.disabled{opacity:.2;pointer-events:none;}
+
+.chapter-indicator{position:fixed;bottom:24px;left:var(--sidebar-w);right:0;display:flex;justify-content:center;align-items:center;gap:10px;z-index:199;pointer-events:none;}
+.chapter-dots{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.95);border:1px solid var(--brd);padding:12px 24px;border-radius:24px;pointer-events:all;box-shadow:0 2px 12px rgba(0,0,0,.12);}
+.ch-dot{width:14px;height:14px;border-radius:50%;background:var(--brd);cursor:pointer;transition:all var(--trans);}
+.ch-dot.active{background:var(--ac);transform:scale(1.35);box-shadow:0 0 8px rgba(29,95,196,.4);}
+.ch-dot:hover{background:var(--ac2);}
+.ch-label{font-size:1.5rem;color:var(--txt);margin-right:8px;font-weight:700;white-space:nowrap;}
+
+.slides-area{position:fixed;top:var(--cab-h);left:var(--sidebar-w);right:0;bottom:3px;overflow:hidden;}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:16px 20px 96px;opacity:0;transform:translateX(30px);transition:opacity .4s ease,transform .4s ease;pointer-events:none;overflow:hidden;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide::-webkit-scrollbar{width:5px;} .slide::-webkit-scrollbar-thumb{background:var(--brd);border-radius:4px;}
+
+.sc{max-width:100%;width:100%;margin:0;}
+.sc.section-slide{margin:auto 0;}
+.sc.title-slide{margin:auto 0;text-align:center;}
+
+h1{font-size:4.4rem;font-weight:800;color:var(--tit);line-height:1.1;margin-bottom:10px;}
+h2{font-size:3.4rem;font-weight:700;color:var(--tit);line-height:1.1;margin-bottom:10px;}
+h3.label{font-size:1.44rem;text-transform:uppercase;letter-spacing:3px;color:var(--ac);font-weight:700;margin-bottom:6px;}
+h4{font-size:2rem;font-weight:700;color:var(--tit);margin-bottom:6px;}
+
+.txt{font-size:1.84rem;line-height:1.6;color:var(--txt);margin-bottom:10px;text-align:justify;}
+.txt strong{color:var(--tit);font-weight:700;}
+.txt-sm{font-size:1.67rem;line-height:1.6;color:var(--txt2);margin-bottom:8px;text-align:justify;}
+.txt-center{text-align:center;}
+
+.dest{background:linear-gradient(135deg,#1e3a8a,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;}
+
+.analogia{background:var(--bg-dest);border-left:4px solid var(--ac);border-radius:0 var(--rad) var(--rad) 0;padding:12px 20px;margin:10px 0;font-size:1.67rem;line-height:1.6;color:var(--txt);}
+.analogia .al{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:700;margin-bottom:4px;}
+
+.curiosidade{background:rgba(198,40,40,.07);border-left:4px solid var(--verm);border-radius:0 var(--rad) var(--rad) 0;padding:12px 20px;margin:10px 0;font-size:1.67rem;line-height:1.6;color:var(--txt);}
+.curiosidade .cl{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;color:var(--verm);font-weight:700;margin-bottom:4px;}
+
+.dica{background:rgba(29,95,196,.07);border-left:4px solid var(--ac);border-radius:0 var(--rad) var(--rad) 0;padding:12px 20px;margin:10px 0;font-size:1.67rem;line-height:1.6;color:var(--txt);}
+.dica .dl{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:700;margin-bottom:4px;}
+
+.sucesso{background:rgba(22,163,74,.08);border-left:4px solid var(--verde);border-radius:0 var(--rad) var(--rad) 0;padding:12px 20px;margin:10px 0;font-size:1.67rem;line-height:1.6;color:var(--txt);}
+.sucesso .sl{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;color:var(--verde);font-weight:700;margin-bottom:4px;}
+
+.cards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 0;}
+.card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:14px;flex:1;min-width:180px;max-width:300px;transition:all var(--trans);}
+.card:hover{border-color:var(--ac);transform:translateY(-2px);}
+.card-icon{font-size:2.8rem;display:block;margin-bottom:8px;}
+.card h4{font-size:1.62rem;margin-bottom:4px;}
+.card p{font-size:1.5rem;line-height:1.6;color:var(--txt2);}
+
+.two-col{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0;}
+.three-col{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 0;}
+
+.vs{display:flex;gap:12px;align-items:stretch;margin:8px auto;max-width:100%;flex-wrap:wrap;}
+.vs-col{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:12px 14px;flex:1;min-width:200px;}
+.vs-col ul{list-style:none;padding:0;margin-top:6px;}
+.vs-col li{padding:4px 0;font-size:1.5rem;line-height:1.6;color:var(--txt2);border-bottom:1px solid var(--brd);}
+.vs-col li:last-child{border:none;}
+.vs-div{display:flex;align-items:center;font-weight:800;font-size:1.7rem;color:var(--txt3);}
+
+.items{display:flex;flex-direction:column;gap:6px;margin:8px 0;}
+.it{display:flex;align-items:flex-start;gap:12px;background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:10px 14px;font-size:1.6rem;line-height:1.6;color:var(--txt);}
+.it-icon{font-size:1.8rem;flex-shrink:0;margin-top:2px;}
+
+.tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:1.6rem;}
+.tbl th{background:var(--bg-dest);color:var(--ac);padding:8px 14px;text-align:left;font-weight:700;font-size:1.44rem;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ac);}
+.tbl td{padding:8px 14px;border-bottom:1px solid var(--brd);color:var(--txt);line-height:1.5;}
+.tbl tr:hover td{background:rgba(29,95,196,.05);}
+.tbl td strong{color:var(--tit);}
+
+.title-header{text-align:left;border-bottom:2px solid var(--brd);padding-bottom:12px;margin-bottom:14px;}
+.title-header .inst{font-size:1.44rem;text-transform:uppercase;letter-spacing:3px;color:var(--txt3);margin-bottom:8px;}
+.title-header h1{font-size:3.8rem;margin-bottom:6px;line-height:1.1;}
+.title-header .sub{font-size:1.5rem;color:var(--txt3);font-weight:400;margin:0;line-height:1.5;}
+
+.title-slide .inst{font-size:1.44rem;text-transform:uppercase;letter-spacing:4px;color:var(--txt3);margin-bottom:20px;}
+.title-slide h1{font-size:5rem;margin-bottom:12px;}
+.title-slide .sub{font-size:2rem;color:var(--txt2);font-weight:300;margin-bottom:16px;}
+.title-slide .prof{font-size:1.6rem;color:var(--txt3);margin-top:14px;}
+.title-slide .badge{display:inline-block;background:var(--bg-dest);border:1px solid var(--ac);color:var(--ac);padding:8px 22px;border-radius:20px;font-size:1.5rem;font-weight:600;margin-top:12px;}
+
+.section-slide{text-align:center;}
+.section-slide .big-icon{font-size:6rem;margin-bottom:16px;}
+.section-slide h1{font-size:4.4rem;}
+.section-slide .sub{font-size:1.8rem;color:var(--txt2);font-weight:300;margin-top:10px;max-width:820px;margin-left:auto;margin-right:auto;line-height:1.7;}
+
+kbd{background:var(--bg3);border:1px solid var(--brd);border-radius:3px;padding:2px 8px;font-family:var(--mono);font-size:1.5rem;}
+.verm{color:var(--verm);}
+
+/* === COMPONENTES ESPECIAIS === */
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin:10px 0;position:relative;}
+.timeline::before{content:'';position:absolute;left:22px;top:0;bottom:0;width:2px;background:var(--brd);}
+.tl-item{display:flex;gap:14px;padding:8px 0;position:relative;}
+.tl-dot{width:44px;height:44px;border-radius:50%;background:var(--bg-dest);border:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;z-index:1;}
+.tl-body{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:10px 14px;flex:1;}
+.tl-body h4{font-size:1.6rem;font-weight:700;color:var(--tit);margin-bottom:2px;}
+.tl-body p{font-size:1.44rem;color:var(--txt2);line-height:1.5;margin:0;}
+.tl-tag{font-size:1.2rem;background:rgba(29,95,196,.12);color:var(--ac);padding:2px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-bottom:3px;}
+
+/* Regra card */
+.regra-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+.regra-card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:14px;}
+.regra-card.danger{border-color:rgba(198,40,40,.4);background:rgba(198,40,40,.05);}
+.regra-card.info{border-color:rgba(29,95,196,.4);background:rgba(29,95,196,.05);}
+.regra-card.warn{border-color:rgba(180,83,9,.4);background:rgba(180,83,9,.05);}
+.regra-card.ok{border-color:rgba(22,163,74,.4);background:rgba(22,163,74,.05);}
+.regra-icon{font-size:2rem;display:block;margin-bottom:6px;}
+.regra-card h4{font-size:1.62rem;margin-bottom:4px;}
+.regra-card p{font-size:1.44rem;color:var(--txt2);line-height:1.5;margin:0;}
+
+/* Mapa de conteúdo */
+.mapa{display:flex;flex-direction:column;gap:8px;margin:8px 0;}
+.mapa-bim{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:12px 14px;}
+.mapa-bim-tit{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:6px;}
+.mapa-topics{display:flex;flex-wrap:wrap;gap:6px;}
+.mapa-tag{font-size:1.44rem;padding:4px 12px;border-radius:20px;font-weight:600;}
+
+/* Atraso tabela */
+.atraso-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0;}
+.atraso-item{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:14px;text-align:center;}
+.atraso-dias{font-size:2rem;font-weight:800;margin-bottom:4px;}
+.atraso-pct{font-size:1.44rem;color:var(--txt2);}
+
+/* Bio box */
+.bio-box{display:flex;gap:20px;align-items:flex-start;margin:10px 0;}
+.bio-img{width:120px;height:120px;border-radius:var(--rad);border:2px solid var(--brd);object-fit:cover;flex-shrink:0;}
+.bio-content{flex:1;}
+
+/* Avaliacao visual */
+.aval-bim{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:16px;margin-bottom:8px;}
+.aval-bim-titulo{font-size:1.44rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:700;margin-bottom:10px;}
+.aval-linha{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.aval-linha:last-child{margin-bottom:0;}
+.aval-nome{font-size:1.4rem;font-weight:600;color:var(--tit);flex:0 0 235px;width:235px;}
+.aval-barra-wrap{flex:1;min-width:40px;background:var(--brd);border-radius:4px;height:8px;overflow:hidden;}
+.aval-barra{height:100%;border-radius:4px;}
+.aval-pts{font-size:1.44rem;font-weight:700;flex:0 0 62px;text-align:right;white-space:nowrap;}
+.aval-sub{font-size:1.32rem;color:var(--txt3);margin:-4px 0 10px;line-height:1.4;}
+
+/* Terminal — específico desta disciplina */
+.term{background:#12161f;border:1px solid #2a3242;border-radius:var(--rad);padding:12px 16px;margin:8px 0;font-family:var(--mono);font-size:1.5rem;line-height:1.7;color:#d7e0ee;overflow-x:auto;white-space:pre;}
+.term .p{color:#4ade80;}
+.term .c{color:#7dd3fc;}
+.term .o{color:#8b97ab;}
+
+/* Arquivo pronto (Dockerfile, script) com barra de nome */
+.arq{border:1px solid #2a3242;border-radius:var(--rad);overflow:hidden;margin:8px 0;}
+.arq-nome{background:#1c2333;color:#9db2d3;font-family:var(--mono);font-size:1.36rem;padding:6px 14px;border-bottom:1px solid #2a3242;display:flex;align-items:center;gap:8px;}
+.arq-nome .tag{margin-left:auto;background:rgba(125,211,252,.16);color:#7dd3fc;border-radius:10px;padding:1px 10px;font-size:1.2rem;font-family:var(--fonte);font-weight:700;}
+.arq pre{background:#12161f;color:#d7e0ee;font-family:var(--mono);font-size:1.3rem;line-height:1.5;padding:10px 14px;margin:0;overflow-x:auto;white-space:pre;}
+.arq pre .k{color:#c792ea;font-weight:600;}
+.arq pre .s{color:#a5d6a7;}
+.arq pre .cm{color:#7b8496;font-style:italic;}
+.arq.baixo pre{font-size:1.16rem;line-height:1.45;}
+/* Arquivo longo em duas colunas lado a lado — metade do arquivo em cada painel */
+.arq .corpo{display:flex;}
+.arq .corpo pre{flex:1;min-width:0;}
+.arq .corpo pre + pre{border-left:1px solid #2a3242;}
+/* Coluna com bloco de código: sem min-width:0 o conteúdo "pre" impede o flex de
+   encolher e o .two-col quebra em duas linhas, dobrando a altura do slide. */
+.two-col.cod > div{min-width:0;}
+
+/* Pilha de camadas — máquina virtual × container */
+.pilha{display:flex;gap:16px;margin:10px 0;align-items:flex-end;}
+.pilha-col{flex:1;}
+.pilha-tit{text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:6px;color:var(--tit);}
+.cx{border:1px solid var(--brd);border-radius:6px;padding:7px 10px;margin-bottom:4px;text-align:center;font-size:1.36rem;font-weight:600;background:var(--bg3);color:var(--txt2);line-height:1.3;}
+.cx.app{background:rgba(29,95,196,.12);border-color:rgba(29,95,196,.4);color:var(--ac);}
+.cx.so{background:rgba(198,40,40,.08);border-color:rgba(198,40,40,.4);color:var(--verm);}
+.cx.ker{background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.45);color:#15803d;}
+.cx.hw{background:#e3e7ee;color:var(--txt3);}
+.pilha-nota{font-size:1.32rem;color:var(--txt3);text-align:center;margin-top:4px;line-height:1.4;}
+
+/* Passos numerados em faixa */
+.passo{display:flex;gap:12px;align-items:flex-start;background:var(--bg3);border:1px solid var(--brd);border-left:4px solid var(--ac);border-radius:var(--rad);padding:9px 14px;margin-bottom:6px;}
+.passo-n{width:34px;height:34px;border-radius:50%;background:var(--ac);color:#fff;font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.passo-txt{font-size:1.5rem;line-height:1.5;color:var(--txt);}
+.passo-txt strong{color:var(--tit);}
+
+@media(max-width:900px){
+  .sidebar{width:155px;} :root{--sidebar-w:155px;}
+  h1{font-size:3rem;} h2{font-size:2.4rem;}
+  .slide{padding:20px 18px 80px;}
+  .regra-grid{grid-template-columns:1fr;}
+  .atraso-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .sidebar{display:none;} :root{--sidebar-w:0px;}
+  .slide{padding:16px 14px 80px;}
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA IFRN -->
+<div class="barra-if"></div>
+<div class="cab">
+  <img src="images/logo-horizontal.png" alt="IFRN">
+  <div class="cab-breadcrumb">
+    <span class="current">Sistemas Operacionais · Aula 01 — Apresentação e Introdução</span>
+  </div>
+  <span class="cnt" id="counter">1/45</span>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nav-item active" data-chapter="0" onclick="goTo(0)"><span>🏠</span> Início<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="1" onclick="goTo(1)"><span>👨‍🏫</span> O Professor<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="2" onclick="goTo(2)"><span>👥</span> Os Alunos<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="3" onclick="goTo(3)"><span>🖥️</span> O que é um SO?<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="4" onclick="goTo(4)"><span>📚</span> Ementa<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="5" onclick="goTo(5)"><span>🎓</span> Metodologia<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="6" onclick="goTo(6)"><span>📋</span> Combinados<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="7" onclick="goTo(7)"><span>🐧</span> Mãos à obra<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="8" onclick="goTo(8)"><span>🐳</span> Ambiente Docker<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="9" onclick="goTo(9)"><span>❓</span> Dúvidas<span class="sub-count"></span></div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress"><div class="progress-fill" id="fill"></div></div>
+
+<!-- ==================== SLIDES ==================== -->
+<div class="slides-area">
+
+<!-- ===== CAP 0: TÍTULO ===== -->
+<div class="slide active" data-chapter="0">
+  <div class="sc title-slide">
+    <p class="inst">Instituto Federal do Rio Grande do Norte — Tecnologia em Análise e Desenvolvimento de Sistemas</p>
+    <h1>Bem-vindos a <span class="dest">Sistemas Operacionais</span></h1>
+    <p class="sub">Apresentação, Ementa, Metodologia e Introdução</p>
+    <p class="prof">Aula 01 · Prof. Bonfim Aquino — IFRN — 2026.1</p>
+    <span class="badge">60 h · 80 h/a · 4 créditos · TADS</span>
+  </div>
+</div>
+
+<div class="slide" data-chapter="0">
+  <div class="sc">
+    <h3 class="label">O que faremos hoje</h3>
+    <div class="items">
+      <div class="it"><span class="it-icon">👨‍🏫</span><span>Apresentação do professor — formação, experiência e como funciona a aula</span></div>
+      <div class="it"><span class="it-icon">👥</span><span>Apresentação dos alunos — um momento para nos conhecermos</span></div>
+      <div class="it"><span class="it-icon">🖥️</span><span><strong>O que é um Sistema Operacional?</strong> — máquina estendida e gerente de recursos</span></div>
+      <div class="it"><span class="it-icon">📚</span><span>Ementa — as 6 unidades e como elas se encaixam</span></div>
+      <div class="it"><span class="it-icon">🎓</span><span>Metodologia e combinados — avaliação e regras de convivência</span></div>
+      <div class="it"><span class="it-icon">🐧</span><span>Mãos à obra — primeiro contato com o laboratório Linux</span></div>
+      <div class="it"><span class="it-icon">🐳</span><span><strong>Ambiente Docker</strong> — montando, passo a passo, o Linux que você vai usar o semestre inteiro</span></div>
+    </div>
+    <div class="sucesso">
+      <div class="sl">🌟 Bem-vindos!</div>
+      Esta é a disciplina que <strong>explica o que acontece por baixo do código que vocês escrevem</strong>. Vamos abrir a caixa preta.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 1: O PROFESSOR ===== -->
+<div class="slide" data-chapter="1">
+  <div class="sc section-slide">
+    <span class="big-icon">👨‍🏫</span>
+    <h1>Quem sou <span class="dest">eu?</span></h1>
+    <p class="sub">Antes de começar, vamos nos apresentar! Conhecer o professor ajuda a entender melhor a disciplina, o estilo das aulas e o que esperar do semestre.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="1">
+  <div class="sc">
+    <h3 class="label">Formação Acadêmica</h3>
+    <h1>Prof. <span class="dest">Bonfim Aquino</span></h1>
+    <p class="txt" style="margin-bottom:6px;">bonfim.aquino@ifrn.edu.br</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">🎓</div>
+        <div class="tl-body">
+          <span class="tl-tag">Graduação</span>
+          <h4>Engenheiro Eletricista</h4>
+          <p>Universidade Federal do Rio Grande do Norte — UFRN<br>Base sólida em eletrônica, sistemas e telecomunicações.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">📘</div>
+        <div class="tl-body">
+          <span class="tl-tag">Mestrado</span>
+          <h4>Mestre em Engenharia Elétrica e Computação</h4>
+          <p>Universidade Federal do Rio Grande do Norte — UFRN<br>Aprofundamento em pesquisa e computação avançada.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">🏅</div>
+        <div class="tl-body">
+          <span class="tl-tag">Doutorado</span>
+          <h4>Doutor em Engenharia Elétrica e Computação</h4>
+          <p>Universidade Federal do Rio Grande do Norte — UFRN<br>Pesquisa de alto nível em tecnologia e inovação.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="1">
+  <div class="sc">
+    <h3 class="label">Experiência Profissional</h3>
+    <h2>Além da sala de <span class="dest">aula</span></h2>
+
+    <div class="two-col" style="align-items:flex-start;gap:20px;">
+      <div class="cards" style="flex:2;flex-wrap:wrap;">
+        <div class="card">
+          <span class="card-icon">📡</span>
+          <h4>Siemens</h4>
+          <p>Atuou como <strong>Engenheiro de Telecomunicações</strong> na Siemens — uma das maiores empresas de tecnologia do mundo.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🏫</span>
+          <h4>IFRN — desde 2010</h4>
+          <p><strong>Professor do IFRN</strong> há mais de 15 anos, formando alunos em tecnologia, computação e engenharia.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔬</span>
+          <h4>Nadic — Pesquisador</h4>
+          <p>Pesquisador do <strong>Nadic</strong> com atuação em diversos projetos de <strong>PD&I</strong> (Pesquisa, Desenvolvimento e Inovação).</p>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="analogia">
+          <div class="al">💡 Por que isso importa para você?</div>
+          Um professor com experiência em indústria e pesquisa traz para a sala de aula não apenas a teoria dos livros, mas também <strong>casos reais, desafios práticos e as tendências do mercado de tecnologia</strong>. Aproveite para fazer perguntas além do currículo!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 2: OS ALUNOS ===== -->
+<div class="slide" data-chapter="2">
+  <div class="sc section-slide">
+    <span class="big-icon">👥</span>
+    <h1>Quem são <span class="dest">vocês?</span></h1>
+    <p class="sub">Agora é a sua vez! Uma turma boa começa com pessoas que se conhecem. Vamos fazer uma rodada rápida de apresentações.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="2">
+  <div class="sc">
+    <h3 class="label">Dinâmica de apresentação</h3>
+    <h2>Me conta um <span class="dest">pouco sobre você</span></h2>
+
+    <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px;">
+      <img src="images/pangolim-nervoso.png" alt="Pangolim Nervoso" style="height:120px;object-fit:contain;border-radius:var(--rad);flex-shrink:0;">
+      <div style="flex:1;min-width:220px;">
+        <p class="txt-sm" style="margin-bottom:8px;">Falar na frente da turma pode intimidar — o pangolim aí do lado entende bem. Mas a turma está aqui para aprender junto. Diga apenas quatro coisas rápidas:</p>
+        <div class="items">
+          <div class="it"><span class="it-icon">🙋</span><span><strong>Seu nome</strong> — como prefere ser chamado(a)</span></div>
+          <div class="it"><span class="it-icon">💻</span><span><strong>Que linguagens você já programou?</strong> — C, Java, Python, JavaScript…</span></div>
+          <div class="it"><span class="it-icon">🐧</span><span><strong>Já usou Linux?</strong> — nunca, só olhei, uso às vezes, uso todo dia</span></div>
+          <div class="it"><span class="it-icon">💭</span><span><strong>O que você espera desta disciplina?</strong></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Por que eu pergunto isso</div>
+      Esta disciplina usa <strong>C</strong> e <strong>Linux</strong> porque são a janela mais direta para ver o SO funcionando. <strong>Não saber Linux não é problema</strong> — começamos pelo básico.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 3: O QUE É UM SO ===== -->
+<div class="slide" data-chapter="3">
+  <div class="sc section-slide">
+    <span class="big-icon">🖥️</span>
+    <h1>O que é um <span class="dest">Sistema Operacional?</span></h1>
+    <p class="sub">O programa que você nunca abriu, nunca instalou conscientemente e nunca fechou — mas que está rodando agora, em cada aparelho seu, mediando absolutamente tudo.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">Ponto de partida</h3>
+    <h2>Hardware sozinho não faz <span class="dest">nada</span></h2>
+
+    <div class="analogia">
+      <div class="al">📖 Tanenbaum &amp; Bos — Sistemas Operacionais Modernos, 4ª ed., p. 1</div>
+      "Se todo programador de aplicativos tivesse de compreender como todas essas partes funcionam em detalhe, <strong>nenhum código jamais seria escrito</strong>."
+    </div>
+
+    <p class="txt-sm">Um computador moderno é um amontoado de peças que não se conhecem: processadores, memórias, discos, teclado, placa de rede, GPU. Cada uma com seu próprio jeito de ser controlada, seus registradores, seus tempos. Alguém precisa colocar ordem nisso.</p>
+
+    <div class="vs">
+      <div class="vs-col">
+        <h4>🧱 Programas de sistema</h4>
+        <ul>
+          <li>Operam <strong>o próprio computador</strong></li>
+          <li>Sistema operacional, drivers, compiladores</li>
+          <li>Só o <strong>SO</strong> roda em <strong>modo núcleo</strong> — acesso total ao hardware. Compiladores e shell rodam em modo usuário, como qualquer aplicativo</li>
+        </ul>
+      </div>
+      <div class="vs-div">×</div>
+      <div class="vs-col">
+        <h4>📱 Programas aplicativos</h4>
+        <ul>
+          <li>Resolvem <strong>o problema do usuário</strong></li>
+          <li>Navegador, editor, jogo, seu programa em C</li>
+          <li>Rodam em <strong>modo usuário</strong> — acesso restrito, pedem tudo ao SO</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="txt-sm">O <strong>SO</strong> é o programa de sistema mais básico: controla os recursos da máquina e fornece a base sobre a qual os demais programas são escritos.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">Os dois papéis do SO</h3>
+    <h2>Duas visões da mesma <span class="dest">coisa</span></h2>
+
+    <div class="cards">
+      <div class="card" style="max-width:none;">
+        <span class="card-icon">🎁</span>
+        <h4>1. Máquina estendida <span style="font-weight:400;color:var(--txt3);">(visão de cima para baixo)</span></h4>
+        <p>O SO <strong>esconde a feiura do hardware</strong> e oferece ao programador uma máquina mais simples de programar, feita de abstrações limpas: arquivos, processos, memória. Você chama <kbd>read()</kbd> e não quer saber de prato, cilindro e trilha.</p>
+      </div>
+      <div class="card" style="max-width:none;">
+        <span class="card-icon">👮</span>
+        <h4>2. Gerente de recursos <span style="font-weight:400;color:var(--txt3);">(visão de baixo para cima)</span></h4>
+        <p>O SO <strong>arbitra a disputa</strong>: dezenas de programas querem CPU, memória, disco e rede ao mesmo tempo. Ele decide quem usa o quê, quando e por quanto tempo — e impede que um invada o outro.</p>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Guarde estes dois nomes</div>
+      <strong>Máquina estendida</strong> e <strong>gerente de recursos</strong> são as duas metades da resposta para "o que faz um SO?". Toda unidade desta disciplina vai ser uma das duas — ou as duas ao mesmo tempo.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">Papel 1 — Máquina estendida</h3>
+    <h2>Ler um dado do <span class="dest">disco</span></h2>
+
+    <div class="vs">
+      <div class="vs-col" style="border-color:rgba(198,40,40,.4);background:rgba(198,40,40,.05);">
+        <h4 class="verm">😱 Sem sistema operacional</h4>
+        <ul>
+          <li>Descobrir <strong>prato, cilindro, trilha e setor</strong></li>
+          <li>Ligar o motor e esperar o eixo estabilizar</li>
+          <li>Posicionar a cabeça de leitura/escrita</li>
+          <li>Aguardar o setor certo passar sob a cabeça</li>
+          <li>Ler os bytes, tratar erro de CRC, remontar o dado</li>
+          <li>E <strong>refazer tudo</strong> para cada modelo de disco</li>
+        </ul>
+      </div>
+      <div class="vs-div">→</div>
+      <div class="vs-col" style="border-color:rgba(22,163,74,.4);background:rgba(22,163,74,.05);">
+        <h4 style="color:var(--verde);">😌 Com sistema operacional</h4>
+        <ul>
+          <li><kbd>fd = open("dados.txt")</kbd></li>
+          <li><kbd>read(fd, buffer, 100)</kbd></li>
+          <li><kbd>close(fd)</kbd></li>
+          <li style="padding-top:10px;">Funciona igual em HD, SSD, pendrive ou disco de rede.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="analogia">
+      <div class="al">💡 A analogia do carro</div>
+      Dirigir não exige entender injeção eletrônica nem sincronismo de válvulas: volante, pedais e câmbio são a <strong>abstração</strong> que o carro oferece. O SO faz o mesmo com o hardware — <strong>arquivos</strong> em vez de setores, <strong>processos</strong> em vez de registradores, <strong>memória virtual</strong> em vez de endereços físicos.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">Papel 2 — Gerente de recursos</h3>
+    <h2>Quem usa o quê, e <span class="dest">quando?</span></h2>
+
+    <p class="txt-sm">Abra o gerenciador de tarefas agora: <strong>centenas de processos</strong> "rodando ao mesmo tempo" em um punhado de núcleos. Eles não rodam ao mesmo tempo — se <strong>revezam</strong> tão rápido que a ilusão é perfeita. Quem organiza o revezamento é o SO.</p>
+
+    <div class="two-col" style="align-items:flex-start;gap:16px;">
+      <div style="flex:1;">
+        <div class="items">
+          <div class="it"><span class="it-icon">⏱️</span><span><strong>Multiplexação no tempo</strong> — a CPU e a impressora são usadas por um programa de cada vez, em turnos. Quem decide a ordem é o <em>escalonador</em>.</span></div>
+          <div class="it"><span class="it-icon">📦</span><span><strong>Multiplexação no espaço</strong> — a memória e o disco são divididos em pedaços simultâneos, cada programa com o seu.</span></div>
+          <div class="it"><span class="it-icon">🛡️</span><span><strong>Proteção</strong> — o SO impede que um programa leia ou corrompa a memória do outro. Sem isso, um bug em um aplicativo derrubaria a máquina inteira.</span></div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="curiosidade">
+          <div class="cl">🔥 O SO é um programa "preguiçoso"</div>
+          Enquanto você lê este slide, o SO está, na maior parte do tempo, <strong>parado</strong>. Ele só acorda quando o hardware o interrompe (pacote de rede, timer) ou quando um programa lhe pede algo.
+        </div>
+        <div class="dica">
+          <div class="dl">💡 Ligação com a próxima aula</div>
+          Esse "pedir algo ao SO" tem nome — <strong>chamada de sistema</strong> — e é a fronteira exata entre o seu código e o kernel. Chegaremos lá na Aula 04.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">O mapa mental da disciplina</h3>
+    <h2>As três <span class="dest">peças</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🎭</span>
+        <h4>Virtualização</h4>
+        <p>Transformar <strong>um</strong> recurso físico em <strong>muitos</strong> virtuais: uma CPU vira "uma CPU por processo"; a RAM vira "uma memória por programa".</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔀</span>
+        <h4>Concorrência</h4>
+        <p>Várias linhas de execução mexendo nas <strong>mesmas</strong> coisas ao mesmo tempo dão errado de formas assustadoras. Como coordenar sem travar tudo?</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💾</span>
+        <h4>Persistência</h4>
+        <p>Memória some quando falta energia. Como guardar dados de forma <strong>durável</strong> num dispositivo lento e sujeito a falhas?</p>
+      </div>
+    </div>
+
+    <div class="sucesso">
+      <div class="sl">✅ Como isso ajuda você</div>
+      Quando a matéria parecer um monte de algoritmos soltos (FIFO, LRU, MLFQ, SSTF…), pergunte: <strong>qual das três peças este algoritmo resolve?</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 4: EMENTA ===== -->
+<div class="slide" data-chapter="4">
+  <div class="sc section-slide">
+    <span class="big-icon">📚</span>
+    <h1>Ementa da <span class="dest">Disciplina</span></h1>
+    <p class="sub">Seis unidades, 60 horas, um semestre. Vamos ver o que cada uma cobre e — mais importante — como elas se conectam.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">Por que estudar isso?</h3>
+    <h2>Objetivos da <span class="dest">Disciplina</span></h2>
+
+    <div style="background:var(--bg-dest);border:1px solid var(--ac);border-radius:var(--rad);padding:16px 20px;margin:10px 0;">
+      <p style="font-size:1.67rem;line-height:1.6;color:var(--txt);">
+        • <strong>Compreender os conceitos relacionados a projeto de sistemas operacionais e sua implementação;</strong><br>
+        • <strong>Utilizar procedimentos necessários para desenvolver programas usando os recursos oferecidos por sistemas operacionais.</strong>
+      </p>
+      <p style="font-size:1.44rem;color:var(--txt3);margin-top:8px;">Fonte: Projeto Pedagógico do Curso — TADS/IFRN</p>
+    </div>
+
+    <p class="txt-sm">Traduzindo: o objetivo <strong>não</strong> é você decorar como o Linux funciona por dentro. É você se tornar um desenvolvedor que entende o chão em que pisa — que sabe por que o programa está lento, por que ele consome 4 GB de RAM, por que o teste passa na sua máquina e falha na do colega, e por que aquele bug só aparece "às vezes".</p>
+
+    <div class="analogia">
+      <div class="al">💡 O diferencial no mercado</div>
+      Praticamente todo desenvolvedor sabe escrever um <em>loop</em>. Poucos sabem explicar por que o servidor caiu sob carga, o que é um <em>deadlock</em> ou por que o container estourou o limite de memória. <strong>É aí que essa disciplina paga o investimento.</strong>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">Visão geral</h3>
+    <h2>As 6 unidades × as 3 <span class="dest">peças</span></h2>
+
+    <div class="mapa">
+      <div class="mapa-bim">
+        <div class="mapa-bim-tit" style="color:var(--txt3);">🧭 Fundamentos</div>
+        <div class="mapa-topics">
+          <span class="mapa-tag" style="background:rgba(102,102,102,.14);color:var(--txt2);">1 · Introdução</span>
+          <span class="mapa-tag" style="background:rgba(102,102,102,.14);color:var(--txt2);">Chamadas de sistema</span>
+          <span class="mapa-tag" style="background:rgba(102,102,102,.14);color:var(--txt2);">Estrutura de um SO</span>
+        </div>
+      </div>
+      <div class="mapa-bim">
+        <div class="mapa-bim-tit" style="color:var(--ac);">🎭 Virtualização</div>
+        <div class="mapa-topics">
+          <span class="mapa-tag" style="background:rgba(29,95,196,.12);color:var(--ac);">2 · Processos</span>
+          <span class="mapa-tag" style="background:rgba(29,95,196,.12);color:var(--ac);">2 · Escalonamento</span>
+          <span class="mapa-tag" style="background:rgba(29,95,196,.12);color:var(--ac);">3 · Gerência de memória</span>
+          <span class="mapa-tag" style="background:rgba(29,95,196,.12);color:var(--ac);">3 · Memória virtual</span>
+        </div>
+      </div>
+      <div class="mapa-bim">
+        <div class="mapa-bim-tit" style="color:var(--amarelo);">🔀 Concorrência</div>
+        <div class="mapa-topics">
+          <span class="mapa-tag" style="background:rgba(180,83,9,.12);color:var(--amarelo);">2 · Threads</span>
+          <span class="mapa-tag" style="background:rgba(180,83,9,.12);color:var(--amarelo);">2 · IPC e sincronização</span>
+          <span class="mapa-tag" style="background:rgba(180,83,9,.12);color:var(--amarelo);">6 · Deadlocks</span>
+        </div>
+      </div>
+      <div class="mapa-bim">
+        <div class="mapa-bim-tit" style="color:var(--verde);">💾 Persistência</div>
+        <div class="mapa-topics">
+          <span class="mapa-tag" style="background:rgba(22,163,74,.12);color:var(--verde);">4 · Sistema de arquivos</span>
+          <span class="mapa-tag" style="background:rgba(22,163,74,.12);color:var(--verde);">5 · Entrada e saída</span>
+          <span class="mapa-tag" style="background:rgba(22,163,74,.12);color:var(--verde);">5 · Discos</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="txt-sm">As <strong>6 unidades</strong> são a ordem oficial da ementa. As <strong>3 peças</strong> são a lente que usaremos para dar sentido a elas. Toda aula vai começar dizendo em que ponto do mapa estamos.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">Conteúdo programático — parte 1</h3>
+    <h2>Unidades <span class="dest">1 a 3</span></h2>
+
+    <div class="two-col" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <div class="it">
+          <span class="it-icon">🧭</span>
+          <div>
+            <strong>1. Introdução</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Conceitos básicos e histórico dos SO</li>
+              <li>Processos, memória, arquivos, E/S e proteção</li>
+              <li>Chamadas de sistema</li>
+              <li>Estrutura de um SO (monolítico, camadas, microkernel)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="it" style="margin-top:8px;">
+          <span class="it-icon">⚙️</span>
+          <div>
+            <strong>2. Gerência de processos</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Processos — criação, estados, término</li>
+              <li>Threads</li>
+              <li>Comunicação interprocessos (IPC)</li>
+              <li>Escalonamento</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="it">
+          <span class="it-icon">🧠</span>
+          <div>
+            <strong>3. Gerência de memória</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Uso direto da memória</li>
+              <li>Abstração: espaço de endereçamento</li>
+              <li>Memória virtual e paginação</li>
+              <li>Algoritmos de substituição de páginas</li>
+            </ul>
+          </div>
+        </div>
+        <div class="curiosidade">
+          <div class="cl">🔥 A unidade mais difícil é a 2</div>
+          Processos e threads <em>parecem</em> simples até você escrever seu primeiro programa concorrente e ver o resultado mudar a cada execução, sem você ter mudado uma linha. É a parte mais desafiadora do semestre — e a que mais aparece em entrevista de emprego.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">Conteúdo programático — parte 2</h3>
+    <h2>Unidades <span class="dest">4 a 6</span></h2>
+
+    <div class="two-col" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <div class="it">
+          <span class="it-icon">📁</span>
+          <div>
+            <strong>4. Sistema de arquivos</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Arquivos — o que são, de verdade</li>
+              <li>Diretórios</li>
+              <li>Questões de implementação (alocação, <em>inodes</em>)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="it" style="margin-top:8px;">
+          <span class="it-icon">🔌</span>
+          <div>
+            <strong>5. Sistemas de Entrada e Saída</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Princípios de hardware e software de E/S</li>
+              <li>Camadas de software (driver, independente, usuário)</li>
+              <li>Discos e escalonamento de braço</li>
+              <li>Interface com usuário: teclado, mouse, monitor</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="it">
+          <span class="it-icon">🔒</span>
+          <div>
+            <strong>6. Deadlocks</strong>
+            <ul style="margin-top:6px;padding-left:16px;font-size:1.5rem;color:var(--txt2);line-height:1.8;">
+              <li>Introdução e condições de ocorrência</li>
+              <li>Detecção e recuperação</li>
+              <li>Evitando deadlocks (algoritmo do banqueiro)</li>
+              <li>Prevenção</li>
+            </ul>
+          </div>
+        </div>
+        <div class="analogia">
+          <div class="al">💡 Deadlock em uma frase</div>
+          Dois carros numa rua estreita, de frente um para o outro. Nenhum passa, nenhum dá ré. <strong>Ninguém sai do lugar, para sempre.</strong> A Unidade 6 ensina as quatro estratégias para lidar com isso — incluindo a mais usada na prática: <em>fingir que não existe</em>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">Referências da disciplina</h3>
+    <h2><span class="dest">Bibliografia</span></h2>
+    <p class="txt-sm">O livro-texto oficial é o <strong>Tanenbaum</strong> — todas as unidades da ementa seguem a estrutura dele. Você não precisa comprar: há exemplares na biblioteca e o material das aulas é suficiente.</p>
+    <table class="tbl">
+      <thead><tr><th>Tipo</th><th>Autor(es)</th><th>Obra</th><th>Ano</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--ac);">📗 Livro-texto</strong></td>
+          <td><strong>TANENBAUM, A. S.; BOS, H.</strong></td>
+          <td><strong>Sistemas Operacionais Modernos</strong> — 4ª ed.</td>
+          <td>2016</td>
+        </tr>
+        <tr>
+          <td>Básica</td>
+          <td>NEGUS, C.</td>
+          <td>Linux: a Bíblia — edição especial</td>
+          <td>2008</td>
+        </tr>
+        <tr>
+          <td>Básica</td>
+          <td>MINASI, M. <em>et al.</em></td>
+          <td>Dominando o Windows Server 2003: a bíblia</td>
+          <td>2003</td>
+        </tr>
+        <tr>
+          <td>Complementar</td>
+          <td>MOTA FILHO, J. E.</td>
+          <td>Descobrindo o Linux — 3ª ed.</td>
+          <td>2012</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="dica">
+      <div class="dl">📖 Bônus gratuito e legal</div>
+      <strong>Operating Systems: Three Easy Pieces</strong> (Arpaci-Dusseau) — de graça em <span style="font-family:var(--mono);color:var(--ac);">ostep.org</span>. É de onde vem a ideia das "três peças" e a linguagem é bem mais leve que a do Tanenbaum.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 5: METODOLOGIA ===== -->
+<div class="slide" data-chapter="5">
+  <div class="sc section-slide">
+    <span class="big-icon">🎓</span>
+    <h1>Metodologia — <span class="dest">Como funcionam as aulas</span></h1>
+    <p class="sub">Como serão as aulas, o que faremos no laboratório, e — muito importante — como você será avaliado(a) ao longo do semestre.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">Formato das aulas</h3>
+    <h2>Teoria + <span class="dest">mão na massa</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">📽️</span>
+        <h4>Aulas expositivas</h4>
+        <p>O conceito, o "porquê" e o desenho no quadro. Você não precisa copiar slide — o material fica disponível depois da aula.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🐧</span>
+        <h4>Laboratório Linux</h4>
+        <p>Programas curtos em <strong>C</strong> que mostram o conceito acontecendo: <kbd>fork</kbd>, <kbd>threads</kbd>, semáforos, memória compartilhada.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🐍</span>
+        <h4>Simuladores</h4>
+        <p>Escalonadores e substituição de páginas simulados em <strong>Python</strong>, para comparar algoritmos e conferir as contas feitas à mão.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎤</span>
+        <h4>Seminários</h4>
+        <p>Temas de aprofundamento apresentados em grupo — virtualização, Android, sistemas de arquivos, escalonamento de discos.</p>
+      </div>
+    </div>
+
+    <div class="sucesso">
+      <div class="sl">✅ Regra da casa: quebre as coisas</div>
+      Vários programas do laboratório <strong>existem para dar errado</strong> — uma condição de corrida, um processo zumbi. Errar de propósito é a forma mais rápida de entender por que a solução correta é necessária.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">Como você será avaliado(a)</h3>
+    <h2>Processo <span class="dest">Avaliativo</span></h2>
+
+    <div class="two-col" style="align-items:stretch;gap:12px;">
+      <div style="flex:1;">
+        <div class="aval-bim">
+          <div class="aval-bim-titulo">📘 1º Bimestre — Total: 100 pontos</div>
+          <p class="aval-sub">Unidade 1 e metade da 2 — introdução, processos e escalonamento</p>
+          <div class="aval-linha">
+            <span class="aval-nome">📄 Prova 1</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:60%;background:linear-gradient(90deg,#1e40af,var(--ac2));"></div></div>
+            <span class="aval-pts" style="color:var(--ac2);">60 pts</span>
+          </div>
+          <div class="aval-linha">
+            <span class="aval-nome">🧪 Lab 1 — multiprocesso</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:25%;background:linear-gradient(90deg,#1e40af,var(--ac2));"></div></div>
+            <span class="aval-pts" style="color:var(--ac2);">25 pts</span>
+          </div>
+          <div class="aval-linha">
+            <span class="aval-nome">📝 Lista de exercícios</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:15%;background:linear-gradient(90deg,#1e40af,var(--ac2));"></div></div>
+            <span class="aval-pts" style="color:var(--ac2);">15 pts</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="aval-bim">
+          <div class="aval-bim-titulo">📗 2º Bimestre — Total: 100 pontos</div>
+          <p class="aval-sub">Restante da 2 (threads e IPC), 6, 3, 4 e 5 — concorrência, memória e persistência</p>
+          <div class="aval-linha">
+            <span class="aval-nome">📄 Prova 2 — concorrência</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:30%;background:linear-gradient(90deg,#166534,var(--verde));"></div></div>
+            <span class="aval-pts" style="color:var(--verde);">30 pts</span>
+          </div>
+          <div class="aval-linha">
+            <span class="aval-nome">📄 Prova 3 — persistência</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:30%;background:linear-gradient(90deg,#166534,var(--verde));"></div></div>
+            <span class="aval-pts" style="color:var(--verde);">30 pts</span>
+          </div>
+          <div class="aval-linha">
+            <span class="aval-nome">🧪 Lab 2 — semáforos</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:20%;background:linear-gradient(90deg,#166534,var(--verde));"></div></div>
+            <span class="aval-pts" style="color:var(--verde);">20 pts</span>
+          </div>
+          <div class="aval-linha">
+            <span class="aval-nome">🧪 Lab 3 + defesa oral</span>
+            <div class="aval-barra-wrap"><div class="aval-barra" style="width:20%;background:linear-gradient(90deg,#166534,var(--verde));"></div></div>
+            <span class="aval-pts" style="color:var(--verde);">20 pts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Por que três provas e não uma?</div>
+      Cada prova fecha <strong>uma peça</strong> (virtualização · concorrência · persistência). Isso força estudo distribuído ao longo do semestre em vez de uma maratona na véspera — e dá tempo de recuperar o rumo se a primeira não for bem. <span style="color:var(--txt3);">Datas exatas no cronograma da turma; a distribuição de pontos pode sofrer pequeno ajuste conforme o calendário acadêmico.</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">O motor da disciplina</h3>
+    <h2>Os três <span class="dest">laboratórios</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">1️⃣</span>
+        <h4>Lab 1 — Multiprocesso</h4>
+        <p>Criar processos com <kbd>fork()</kbd>, executar com <kbd>exec()</kbd> e comunicá-los por <em>pipe</em>. Produto final: um <strong>mini-shell</strong>.</p>
+        <p style="margin-top:6px;color:var(--ac);font-weight:600;">Peça: virtualização</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">2️⃣</span>
+        <h4>Lab 2 — Produtor-consumidor</h4>
+        <p>O clássico da sincronização, resolvido com <strong>semáforos</strong> e memória compartilhada — depois de vê-lo quebrar sem eles.</p>
+        <p style="margin-top:6px;color:var(--amarelo);font-weight:600;">Peça: concorrência</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">3️⃣</span>
+        <h4>Lab 3 — Simulador + defesa</h4>
+        <p>Um simulador em Python de <strong>escalonador</strong> ou de <strong>substituição de páginas</strong>, com <strong>defesa oral</strong> do código.</p>
+        <p style="margin-top:6px;color:var(--verde);font-weight:600;">Peça: virtualização (memória)</p>
+      </div>
+    </div>
+
+    <div class="analogia">
+      <div class="al">💡 Sobre a defesa oral do Lab 3</div>
+      Poucos minutos explicando o próprio código. Não é armadilha: é a garantia de que <strong>quem entendeu recebe a nota de quem entendeu</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 6: COMBINADOS ===== -->
+<div class="slide" data-chapter="6">
+  <div class="sc section-slide">
+    <span class="big-icon">📋</span>
+    <h1>Nossos <span class="dest">Combinados</span></h1>
+    <p class="sub">Para que o semestre flua bem para todos, precisamos de alguns combinados básicos. São regras simples que garantem um ambiente respeitoso e produtivo para toda a turma.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="6">
+  <div class="sc">
+    <h3 class="label">Regras de convivência</h3>
+    <h2>Vamos <span class="dest">combinar?</span></h2>
+
+    <div class="regra-grid">
+      <div class="regra-card ok">
+        <span class="regra-icon">🤝</span>
+        <h4>Respeito mútuo</h4>
+        <p>Respeito ao professor e aos colegas. Sem conversas paralelas que atrapalhem, sem entrar e sair repetidamente da sala. Pergunta boba não existe — pergunta não feita, sim.</p>
+      </div>
+      <div class="regra-card info">
+        <span class="regra-icon">📊</span>
+        <h4>Frequência mínima de 75%</h4>
+        <p>Exigência legal para aprovação. Nesta disciplina a aula prática é onde o conceito "cai a ficha" — faltar ao laboratório custa caro na prova.</p>
+      </div>
+      <div class="regra-card warn">
+        <span class="regra-icon">📅</span>
+        <h4>Entregas em dia</h4>
+        <p>Atividades entregues com atraso recebem <strong>desconto progressivo</strong>. Estimar prazo é parte da formação de quem desenvolve software.</p>
+      </div>
+      <div class="regra-card danger">
+        <span class="regra-icon">📱</span>
+        <h4>Celular e notebook</h4>
+        <p>Celular no silencioso e guardado durante a explicação. O computador do laboratório é <strong>ferramenta de trabalho</strong> da aula — não vale rede social enquanto o colega apresenta.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="6">
+  <div class="sc">
+    <h3 class="label">Tabela de penalidades por atraso</h3>
+    <h2>Entregas em <span class="dest">dia</span></h2>
+
+    <div class="atraso-grid">
+      <div class="atraso-item" style="border-color:rgba(22,163,74,.4);">
+        <div class="atraso-dias" style="color:var(--verde);">No prazo</div>
+        <div class="atraso-pct" style="color:var(--verde);font-weight:700;">100% da nota</div>
+      </div>
+      <div class="atraso-item" style="border-color:rgba(180,83,9,.4);">
+        <div class="atraso-dias" style="color:var(--amarelo);">1 dia</div>
+        <div class="atraso-pct">80% da nota</div>
+      </div>
+      <div class="atraso-item" style="border-color:rgba(229,100,53,.5);">
+        <div class="atraso-dias" style="color:#f97316;">2 dias</div>
+        <div class="atraso-pct">70% da nota</div>
+      </div>
+      <div class="atraso-item" style="border-color:rgba(198,40,40,.5);">
+        <div class="atraso-dias" style="color:var(--verm);">3+ dias</div>
+        <div class="atraso-pct">50% da nota</div>
+      </div>
+    </div>
+
+    <div class="curiosidade">
+      <div class="cl">⚠️ Sobre IA, Stack Overflow e código dos colegas</div>
+      <strong>Usar ChatGPT, Copilot ou o Stack Overflow não é proibido</strong> — usar essas ferramentas bem faz parte da profissão. O que é cobrado é outra coisa: <strong>você precisa entender e saber defender cada linha que entregar</strong>. É exatamente para isso que existe a defesa oral do Lab 3. Entregar código que você não sabe explicar é o mesmo que não entregar — e, se for cópia direta de um colega, ambos ficam com zero.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 7: MÃOS À OBRA ===== -->
+<div class="slide" data-chapter="7">
+  <div class="sc section-slide">
+    <span class="big-icon">🐧</span>
+    <h1>Mãos à <span class="dest">obra</span></h1>
+    <p class="sub">Chega de slide. Vamos abrir um terminal Linux e ver, na prática, tudo o que acabamos de conversar — os processos, o kernel e a fronteira entre eles.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="7">
+  <div class="sc">
+    <h3 class="label">Ambiente de trabalho</h3>
+    <h2>Você vai precisar de um <span class="dest">Linux</span></h2>
+
+    <p class="txt-sm">Todos os exemplos usam <strong>Linux com compilador C (GCC)</strong>. No laboratório as máquinas já estão prontas; em casa há quatro caminhos — e o oficial da disciplina é <strong>o primeiro</strong>:</p>
+
+    <div class="cards">
+      <div class="card" style="border-color:var(--ac);background:rgba(29,95,196,.06);">
+        <span class="card-icon">🐳</span>
+        <h4>Docker <span style="font-size:1.2rem;color:var(--verde);">(o nosso)</span></h4>
+        <p>Um Ubuntu completo dentro de um <em>container</em>, igual para a turma inteira. É o próximo capítulo.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🪟</span>
+        <h4>WSL 2</h4>
+        <p>Só Windows 10/11. Um comando: <kbd>wsl --install</kbd>. Ubuntu sem particionar disco.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📦</span>
+        <h4>Máquina virtual</h4>
+        <p>VirtualBox ou VMware + ISO do Ubuntu. Funciona em tudo, custa desempenho e disco.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💽</span>
+        <h4>Instalação nativa</h4>
+        <p>Ubuntu direto na máquina ou em <em>dual boot</em>. O melhor desempenho, a maior trabalheira.</p>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Atenção — usuários de macOS</div>
+      O macOS é Unix e quase tudo compila, mas recursos que vamos usar (IPC System V, semáforos POSIX não nomeados) <strong>se comportam de forma diferente</strong> lá. Por isso o Docker: dentro dele você tem Linux de verdade, mesmo num Mac.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="7">
+  <div class="sc">
+    <h3 class="label">Prática guiada — faça junto comigo</h3>
+    <h2>Vendo o SO com os próprios <span class="dest">olhos</span></h2>
+
+    <div class="two-col" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <div class="term"><span class="p">$</span> <span class="c">uname -a</span>
+<span class="o">Linux ifrn 6.8.0-generic x86_64 GNU/Linux</span>
+<span class="p">$</span> <span class="c">ls /proc</span>
+<span class="o">1  128  1439  2871  cpuinfo  meminfo ...</span>
+<span class="p">$</span> <span class="c">nproc</span>
+<span class="o">8</span>
+<span class="p">$</span> <span class="c">ps aux | wc -l</span>
+<span class="o">312</span>
+<span class="p">$</span> <span class="c">top</span></div>
+      </div>
+      <div style="flex:1;">
+        <table class="tbl">
+          <thead><tr><th>Comando</th><th>O que ele revela</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>uname -a</kbd></td><td>A versão do <strong>kernel</strong> — o núcleo do SO no comando da máquina</td></tr>
+            <tr><td><kbd>ls /proc</kbd></td><td>Cada <strong>pasta numerada é um processo vivo</strong>: o kernel expõe seu estado como sistema de arquivos</td></tr>
+            <tr><td><kbd>ps aux</kbd> · <kbd>nproc</kbd></td><td>Processos existentes <em>vs.</em> núcleos disponíveis</td></tr>
+            <tr><td><kbd>top</kbd></td><td>O <strong>gerente de recursos em tempo real</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sucesso">
+      <div class="sl">🔎 A pergunta para levar para casa</div>
+      <strong>300 processos para 8 núcleos.</strong> Como todos parecem rodar ao mesmo tempo?
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 8: AMBIENTE DOCKER ===== -->
+<div class="slide" data-chapter="8">
+  <div class="sc section-slide">
+    <span class="big-icon">🐳</span>
+    <h1>O laboratório dentro de um <span class="dest">container</span></h1>
+    <p class="sub">Um Ubuntu completo, com GCC, GDB e strace, rodando na sua máquina em cinco minutos — sem particionar disco, sem instalar nada além de um programa, e <strong>exatamente igual</strong> ao da máquina do colega e ao do professor.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Por que Docker nesta disciplina</h3>
+    <h2>Um ambiente <span class="dest">idêntico</span> para toda a turma</h2>
+
+    <table class="tbl">
+      <thead><tr><th>Opção</th><th>Você instala</th><th>Disco</th><th>Igual p/ a turma?</th><th>Desempenho</th></tr></thead>
+      <tbody>
+        <tr style="background:rgba(29,95,196,.06);">
+          <td><strong style="color:var(--ac);">🐳 Docker</strong></td>
+          <td>Um programa</td>
+          <td>~2 GB</td>
+          <td><strong style="color:var(--verde);">Sim — o Dockerfile garante</strong></td>
+          <td>Quase nativo</td>
+        </tr>
+        <tr>
+          <td>🪟 WSL 2</td>
+          <td>Um subsistema do Windows</td>
+          <td>~2 GB</td>
+          <td>Só se todos instalarem os mesmos pacotes</td>
+          <td>Quase nativo</td>
+        </tr>
+        <tr>
+          <td>📦 Máquina virtual</td>
+          <td>Hipervisor + ISO do Ubuntu</td>
+          <td>~15 GB</td>
+          <td>Não — cada um monta a sua</td>
+          <td>Perde bastante</td>
+        </tr>
+        <tr>
+          <td>💽 Instalação nativa</td>
+          <td>Um sistema operacional inteiro</td>
+          <td>~25 GB</td>
+          <td>Não</td>
+          <td>Melhor de todos</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sucesso">
+      <div class="sl">✅ Container é conteúdo da ementa</div>
+      Um container é feito de <em>namespaces</em> (isolamento de processos, rede e arquivos) e <em>cgroups</em> (limite de CPU e memória) — mecanismos do kernel Linux estudados nas Unidades 2 e 3. Você usa a ferramenta hoje e estuda como ela funciona por dentro depois.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">O que é um container, de verdade</h3>
+    <h2>Máquina virtual <span class="dest">×</span> container</h2>
+
+    <div class="pilha">
+      <div class="pilha-col">
+        <div class="pilha-tit">📦 Máquina virtual</div>
+        <div class="cx app">seu programa em C</div>
+        <div class="cx">bibliotecas do Ubuntu</div>
+        <div class="cx so">kernel Linux <strong>completo</strong> — mais um SO inteiro na memória</div>
+        <div class="cx">hipervisor (VirtualBox / VMware)</div>
+        <div class="cx">SO do seu computador</div>
+        <div class="cx hw">hardware</div>
+        <p class="pilha-nota">Dois sistemas operacionais empilhados. Liga em ~40 s.</p>
+      </div>
+      <div class="pilha-col">
+        <div class="pilha-tit">🐳 Container</div>
+        <div class="cx app">seu programa em C</div>
+        <div class="cx">bibliotecas do Ubuntu</div>
+        <div class="cx ker">kernel <strong>compartilhado</strong> — namespaces + cgroups isolam</div>
+        <div class="cx">SO do seu computador</div>
+        <div class="cx hw">hardware</div>
+        <p class="pilha-nota">Um kernel só. Liga em ~0,3 s.</p>
+      </div>
+    </div>
+
+    <p class="txt-sm">Um container <strong>não é uma máquina</strong>: é um punhado de processos comuns do seu Linux, que o kernel enganou. Para eles, o PID 1 é o <kbd>bash</kbd>, a raiz do sistema de arquivos é a imagem do Ubuntu, e não existe nenhum outro processo no mundo. É <strong>isolamento</strong>, não emulação — por isso é instantâneo.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">O limite da técnica</h3>
+    <h2>Container só roda <span class="dest">Linux sobre Linux</span></h2>
+
+    <p class="txt-sm">Container usa o kernel <strong>do hospedeiro</strong> — logo, só roda Linux sobre Linux. No Windows e no macOS o Docker Desktop mantém, escondida, <strong>uma pequena máquina virtual Linux</strong> e coloca os containers dentro dela. Você não a vê nem a administra, mas ela está lá: num Mac ou num PC com Windows você tem VM <em>e</em> container.</p>
+
+    <div class="vs">
+      <div class="vs-col" style="border-color:rgba(22,163,74,.4);background:rgba(22,163,74,.05);">
+        <h4 style="color:var(--verde);">🪟 Em Windows e macOS</h4>
+        <ul>
+          <li>A VM é <strong>uma só</strong>, minúscula e mantida pela Docker — você nunca a instala nem a atualiza</li>
+          <li>O kernel lá dentro é Linux <strong>de verdade</strong>: <kbd>fork</kbd>, <kbd>ptrace</kbd> e IPC System V funcionam como na prova</li>
+          <li>Trocar de ambiente custa um comando, não uma reinstalação</li>
+        </ul>
+      </div>
+      <div class="vs-div">×</div>
+      <div class="vs-col">
+        <h4>🐧 Em um hospedeiro Linux</h4>
+        <ul>
+          <li>Nenhuma VM no meio: o container é processo direto do seu kernel</li>
+          <li><kbd>ps</kbd> na máquina de fora <strong>mostra</strong> os processos do container, com outro PID</li>
+          <li>É o caso das máquinas do laboratório do IFRN</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">O vocabulário — quatro palavras que se confundem</h3>
+    <h2>Dockerfile, imagem, container e <span class="dest">volume</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">📜</span>
+        <h4>Dockerfile</h4>
+        <p>Arquivo de texto que <strong>descreve</strong> o ambiente: qual Linux, quais programas, onde começar. É o que se versiona e compartilha.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💿</span>
+        <h4>Imagem</h4>
+        <p>O ambiente já construído (<kbd>docker build</kbd>): um sistema de arquivos congelado, <strong>somente leitura</strong>. Construída uma vez, usada muitas.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏃</span>
+        <h4>Container</h4>
+        <p>Uma <strong>execução</strong> da imagem (<kbd>docker run</kbd>). Nasce, roda, termina. O que um altera não afeta os outros.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔗</span>
+        <h4>Volume</h4>
+        <p><kbd>-v</kbd> <strong>espelha</strong> uma pasta sua dentro do container. Você edita no VS Code; o GCC lá dentro lê o arquivo alterado.</p>
+      </div>
+    </div>
+
+    <div class="analogia">
+      <div class="al">💡 Analogia</div>
+      <strong>Dockerfile está para imagem</strong> como <strong>código-fonte está para executável</strong>. E <strong>container está para imagem</strong> como <strong>processo está para programa em disco</strong> — a mesma distinção que a Unidade 2 vai formalizar.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 1 de 6</h3>
+    <h2>Instalar o <span class="dest">Docker</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🪟</span>
+        <h4>Windows 10/11</h4>
+        <p>Baixe o <strong>Docker Desktop</strong> em <span style="font-family:var(--mono);color:var(--ac);">docker.com</span>, aceite <em>"Use WSL 2"</em> e <strong>reinicie</strong>. Se reclamar da virtualização, ligue-a na BIOS (VT-x / SVM).</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🍎</span>
+        <h4>macOS</h4>
+        <p>Baixe o <strong>Docker Desktop</strong> na versão certa: <strong>Apple Silicon</strong> (M1 em diante) ou <strong>Intel</strong>. Arraste para <em>Aplicativos</em> e abra.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🐧</span>
+        <h4>Linux (Ubuntu/Mint)</h4>
+        <p>Não precisa do Desktop: <kbd>sudo apt install docker.io</kbd>. Depois, para dispensar o <kbd>sudo</kbd>: <kbd>sudo usermod -aG docker $USER</kbd> — e <strong>saia e entre de novo</strong> na sessão.</p>
+      </div>
+    </div>
+
+    <div class="term"><span class="p">$</span> <span class="c">docker --version</span>
+<span class="o">Docker version 29.4.0, build 9d7ad9f</span>
+<span class="p">$</span> <span class="c">docker run hello-world</span>
+<span class="o">Hello from Docker!
+This message shows that your installation appears to be...</span></div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 2 de 6</h3>
+    <h2>Criar a pasta do <span class="dest">laboratório</span></h2>
+
+    <div class="two-col cod" style="align-items:flex-start;gap:16px;">
+      <div style="flex:1;">
+        <div class="term"><span class="p">$</span> <span class="c">mkdir so-lab</span>
+<span class="p">$</span> <span class="c">cd so-lab</span>
+<span class="o"># salve aqui os dois arquivos do fim desta aula</span>
+<span class="p">$</span> <span class="c">ls</span>
+<span class="o">Dockerfile   so.sh</span></div>
+        <div class="dica">
+          <div class="dl">💡 Onde colocar a pasta</div>
+          Escolha um caminho <strong>sem acentos e sem espaços</strong> — <kbd>C:\so-lab</kbd> ou <kbd>~/so-lab</kbd>. E fora de OneDrive/Google Drive: sincronizar a cada compilação deixa tudo lento.
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="items">
+          <div class="it"><span class="it-icon">📜</span><span><strong>Dockerfile</strong> — sem extensão, com <strong>D</strong> maiúsculo. No Windows o Bloco de Notas salva como <kbd>Dockerfile.txt</kbd> e o build não acha o arquivo; use o VS Code.</span></div>
+          <div class="it"><span class="it-icon">⚙️</span><span><strong>so.sh</strong> (Linux/macOS) ou <strong>so.ps1</strong> (Windows) — o atalho que dispensa decorar comandos longos.</span></div>
+          <div class="it"><span class="it-icon">💻</span><span>Seus <strong>.c</strong> do semestre vão todos aqui. Nada precisa ser copiado para dentro do container.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="txt-sm">Essa pasta é o seu espaço de trabalho do semestre inteiro: ela fica no <strong>seu</strong> computador e aparece dentro do container como <kbd>/so</kbd>.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 3 de 6 — linha a linha</h3>
+    <h2>Entendendo o <span class="dest">Dockerfile</span></h2>
+
+    <div class="two-col cod" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1.05;">
+        <div class="arq">
+          <div class="arq-nome">📜 Dockerfile <span class="tag">trecho</span></div>
+          <pre><span class="k">FROM</span> ubuntu:24.04
+
+<span class="cm"># para o "man 2 fork" funcionar</span>
+<span class="k">RUN</span> rm -f /etc/dpkg/dpkg.cfg.d/excludes
+
+<span class="k">ENV</span> DEBIAN_FRONTEND=noninteractive
+<span class="k">ENV</span> TZ=America/Fortaleza
+
+<span class="k">RUN</span> apt-get update &amp;&amp; apt-get install -y \
+      build-essential gdb valgrind \
+      strace ltrace procps python3 \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+<span class="k">WORKDIR</span> /so
+<span class="k">CMD</span> [<span class="s">"/bin/bash"</span>]</pre>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <table class="tbl" style="font-size:1.44rem;">
+          <thead><tr><th>Instrução</th><th>O que faz</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>FROM</kbd></td><td>De qual imagem partir — <strong>Ubuntu 24.04 oficial</strong></td></tr>
+            <tr><td><kbd>RUN</kbd></td><td>Executa na construção e <strong>congela o resultado</strong>; cada um vira uma camada</td></tr>
+            <tr><td><kbd>ENV</kbd></td><td>Variável de ambiente — <kbd>noninteractive</kbd> impede o <kbd>apt</kbd> de travar perguntando o fuso</td></tr>
+            <tr><td><kbd>WORKDIR</kbd></td><td>Pasta em que o terminal abre, onde o volume é montado</td></tr>
+            <tr><td><kbd>CMD</kbd></td><td>O que rodar quando o container nasce: um <kbd>bash</kbd></td></tr>
+            <tr><td colspan="2">Instalar e limpar no <strong>mesmo</strong> <kbd>RUN</kbd> economiza ~40 MB — apagar depois não devolve o espaço.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 4 de 6</h3>
+    <h2>Construir a <span class="dest">imagem</span></h2>
+
+    <div class="term"><span class="p">$</span> <span class="c">docker build -t so-ifrn .</span>
+<span class="o">[+] Building 736.6s (10/10) FINISHED
+ =&gt; [1/6] FROM docker.io/library/ubuntu:24.04              12.6s
+ =&gt; [3/6] RUN apt-get update &amp;&amp; apt-get install -y ...    720.0s
+ =&gt; [4/6] RUN dpkg-divert --remove --rename /usr/bin/man    0.1s
+ =&gt; naming to docker.io/library/so-ifrn                    15.6s</span>
+<span class="p">$</span> <span class="c">docker images so-ifrn</span>
+<span class="o">REPOSITORY   TAG      IMAGE ID       SIZE
+so-ifrn      latest   ed5846b1cfc7   1.15GB</span></div>
+
+    <div class="items">
+      <div class="it"><span class="it-icon">🏷️</span><span><kbd>-t so-ifrn</kbd> — o <strong>nome</strong> (<em>tag</em>) da imagem; é por ele que você a chama depois. <kbd>.</kbd> — o <strong>ponto no fim não é enfeite</strong>: é a pasta onde o Docker procura o <kbd>Dockerfile</kbd>. Esquecê-lo é o erro mais comum aqui.</span></div>
+      <div class="it"><span class="it-icon">⏱️</span><span>Os <strong>720 s</strong> da terceira linha são download de pacote — dependem da sua internet. Numa conexão boa, três ou quatro minutos. <strong>Você só repete o <kbd>build</kbd> se editar o Dockerfile</strong>; rodar programas não reconstrói nada.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 5 de 6</h3>
+    <h2>Entrar no <span class="dest">container</span></h2>
+
+    <div class="term"><span class="p">$</span> <span class="c">docker run -it --rm -v "$PWD":/so \
+      --cap-add=SYS_PTRACE --security-opt seccomp=unconfined so-ifrn</span>
+<span class="o">so:/so$ </span><span class="c">ls</span>
+<span class="o">Dockerfile  so.sh  teste.c</span>
+<span class="o">so:/so$ </span><span class="c">uname -sr</span>
+<span class="o">Linux 6.12.76-linuxkit</span></div>
+
+    <table class="tbl" style="font-size:1.44rem;">
+      <thead><tr><th>Pedaço</th><th>Para que serve</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>-it</kbd></td><td>Terminal <strong>interativo</strong> — sem isso o container abre e fecha na hora</td></tr>
+        <tr><td><kbd>--rm</kbd></td><td>Descarta o container ao sair; <strong>a imagem continua</strong></td></tr>
+        <tr><td><kbd>-v "$PWD":/so</kbd></td><td>O <strong>volume</strong>: espelha a pasta atual em <kbd>/so</kbd>. No PowerShell, <kbd>-v "${PWD}:/so"</kbd></td></tr>
+        <tr><td><kbd>--cap-add=SYS_PTRACE</kbd> e <kbd>--security-opt seccomp=unconfined</kbd></td><td>Liberam a chamada <kbd>ptrace()</kbd>, bloqueada por padrão. <strong>Sem as duas, <kbd>gdb</kbd> e <kbd>strace</kbd> não funcionam</strong> — e nós usamos os dois o semestre todo. O prompt <strong style="font-family:var(--mono);color:var(--verde);">so:/so$</strong> confirma que deu certo; <kbd>exit</kbd> volta ao seu computador.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Passo 6 de 6 — verificação do ambiente</h3>
+    <h2>Compilar e rodar o <span class="dest">primeiro programa</span></h2>
+
+    <div class="two-col cod" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <div class="arq">
+          <div class="arq-nome">💻 teste.c <span class="tag">no seu PC</span></div>
+          <pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;unistd.h&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;sys/wait.h&gt;</span>
+<span class="k">int</span> main(<span class="k">void</span>) {
+    pid_t f = fork();
+    <span class="k">if</span> (f == 0)
+        printf(<span class="s">"Sou o FILHO (PID %d)\n"</span>, getpid());
+    <span class="k">else</span> {
+        wait(NULL);
+        printf(<span class="s">"Sou o PAI   (PID %d), filho = %d\n"</span>,
+               getpid(), f);
+    }
+    <span class="k">return</span> 0;
+}</pre>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="term"><span class="o">so:/so$ </span><span class="c">gcc -Wall -g -o teste teste.c</span>
+<span class="o">so:/so$ </span><span class="c">./teste</span>
+<span class="o">Sou o FILHO (PID 12)
+Sou o PAI   (PID 11), filho = 12</span>
+<span class="o">so:/so$ </span><span class="c">strace -e trace=clone,write ./teste</span>
+<span class="o">clone(..., flags=...|SIGCHLD, ...)     = 12
+Sou o FILHO (PID 12)
+write(1, "Sou o PAI  (PID 11)"..., 33) = 33</span>
+<span class="o">so:/so$ </span><span class="c">man 2 fork</span>
+<span class="o">fork(2)   System Calls Manual   fork(2)</span></div>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 PID 11 e PID 12?</div>
+      Fora do container esses PIDs teriam cinco dígitos. O container tem <strong>seu próprio namespace de PID</strong>: ali a numeração recomeça do 1.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">O atalho</h3>
+    <h2>O script <span class="dest">so.sh</span></h2>
+
+    <div class="two-col cod" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <div class="term"><span class="o"># Linux / macOS — uma vez só:</span>
+<span class="p">$</span> <span class="c">chmod +x so.sh</span>
+
+<span class="p">$</span> <span class="c">./so.sh</span>            <span class="o"># abre o laboratório</span>
+<span class="p">$</span> <span class="c">./so.sh run teste.c</span>
+<span class="o">--- saída ---
+Sou o FILHO (PID 12)
+Sou o PAI   (PID 11), filho = 12</span></div>
+        <div class="dica">
+          <div class="dl">💡 No Windows use o <kbd>so.ps1</kbd></div>
+          Mesmos comandos, com <kbd>.\so.ps1</kbd>. Na primeira vez o PowerShell bloqueia scripts; libere só para aquela janela com <kbd>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</kbd>.
+        </div>
+      </div>
+      <div style="flex:1;">
+        <table class="tbl" style="font-size:1.44rem;">
+          <thead><tr><th>Comando</th><th>O que faz</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>./so.sh</kbd></td><td>Abre o terminal do laboratório (constrói a imagem se ainda não existir)</td></tr>
+            <tr><td><kbd>./so.sh build</kbd></td><td>(Re)constrói a imagem — use depois de editar o Dockerfile</td></tr>
+            <tr><td><kbd>./so.sh run x.c</kbd></td><td>Compila com <kbd>-Wall -g -pthread -fopenmp</kbd> e executa</td></tr>
+            <tr><td><kbd>./so.sh exec "…"</kbd></td><td>Roda um comando único lá dentro</td></tr>
+            <tr><td><kbd>./so.sh limpar</kbd></td><td>Apaga a imagem e libera o ~1,15 GB</td></tr>
+          </tbody>
+        </table>
+        <p class="txt-sm">O script guarda o comando completo do slide anterior, incluindo as duas flags de <kbd>ptrace</kbd>, e constrói a imagem automaticamente se ela ainda não existir.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Uso diário</h3>
+    <h2>Comandos e <span class="dest">problemas comuns</span></h2>
+
+    <div class="two-col" style="align-items:flex-start;gap:14px;">
+      <div style="flex:1;">
+        <table class="tbl" style="font-size:1.44rem;">
+          <thead><tr><th>Comando</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>docker images</kbd></td><td>Quais imagens tenho e quanto ocupam</td></tr>
+            <tr><td><kbd>docker ps</kbd></td><td>Containers rodando agora — é o <kbd>ps</kbd> do Docker</td></tr>
+            <tr><td><kbd>docker exec -it so-lab bash</kbd></td><td>Abre um <strong>segundo</strong> terminal no container já aberto</td></tr>
+            <tr><td><kbd>docker stop so-lab</kbd></td><td>Encerra, de fora, um container travado</td></tr>
+            <tr><td><kbd>docker system df</kbd></td><td>Quanto disco o Docker consome no total</td></tr>
+            <tr><td><kbd>docker system prune</kbd></td><td>Faxina geral — apaga o que não está em uso</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="flex:1;">
+        <div class="regra-grid" style="grid-template-columns:1fr;">
+          <div class="regra-card danger">
+            <span class="regra-icon">🔌</span>
+            <h4>"Cannot connect to the Docker daemon"</h4>
+            <p>O Docker Desktop não está aberto (ou o serviço está parado no Linux: <kbd>sudo systemctl start docker</kbd>). É o erro nº 1 da primeira aula.</p>
+          </div>
+          <div class="regra-card warn">
+            <span class="regra-icon">📂</span>
+            <h4>Entrei e a pasta <kbd>/so</kbd> está vazia</h4>
+            <p>Você rodou o <kbd>docker run</kbd> <strong>de outra pasta</strong>. O <kbd>-v "$PWD"</kbd> monta a pasta em que você <em>está</em> — dê <kbd>cd so-lab</kbd> antes.</p>
+          </div>
+          <div class="regra-card info">
+            <span class="regra-icon">💾</span>
+            <h4>Perdi meu programa ao sair</h4>
+            <p>Você o salvou <strong>fora</strong> de <kbd>/so</kbd>. Só o que está em <kbd>/so</kbd> vive no seu computador; o resto morre com o container.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Arquivo 1 de 2</h3>
+    <h2>O <span class="dest">Dockerfile</span> completo</h2>
+
+    <div class="arq baixo">
+      <div class="arq-nome">📜 so-lab/Dockerfile <span class="tag">sem extensão · D maiúsculo</span></div>
+      <div class="corpo">
+      <pre><span class="cm"># Sistemas Operacionais — TADS/IFRN 2026.1 · docker build -t so-ifrn .</span>
+
+<span class="k">FROM</span> ubuntu:24.04
+
+<span class="cm"># O Ubuntu base vem sem páginas de manual. Removendo esta</span>
+<span class="cm"># regra ANTES do apt-get, o "man 2 fork" passa a funcionar.</span>
+<span class="k">RUN</span> rm -f /etc/dpkg/dpkg.cfg.d/excludes
+
+<span class="cm"># Sem isto, alguns pacotes param esperando o fuso e travam.</span>
+<span class="k">ENV</span> DEBIAN_FRONTEND=noninteractive
+<span class="k">ENV</span> TZ=America/Fortaleza
+<span class="k">ENV</span> LANG=C.UTF-8
+
+<span class="k">RUN</span> apt-get update &amp;&amp; apt-get install -y \
+      --no-install-recommends \
+      build-essential gdb valgrind libomp-dev \
+      strace ltrace procps psmisc htop time \
+      python3 nano vim less \
+      man-db manpages manpages-dev \
+      manpages-posix manpages-posix-dev \
+      file tree bsdextrautils \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*</pre>
+      <pre><span class="cm"># A imagem base desvia /usr/bin/man para um aviso de</span>
+<span class="cm"># "sistema minimizado". Desfeito o desvio, o man-db</span>
+<span class="cm"># recém-instalado volta a ser o man de verdade.</span>
+<span class="k">RUN</span> rm -f /usr/bin/man \
+ &amp;&amp; dpkg-divert --quiet --remove --rename /usr/bin/man
+
+<span class="cm"># Prompt verde "so:" — assim você sempre sabe que está</span>
+<span class="cm"># DENTRO do container. O ~/.bashrc do root é lido depois</span>
+<span class="cm"># do /etc/bash.bashrc e redefiniria o prompt, por isso o</span>
+<span class="cm"># tee grava nos dois arquivos.</span>
+<span class="k">RUN</span> printf <span class="s">'%s\n'</span> \
+    <span class="s">"export PS1='\[\e[1;32m\]so\[\e[0m\]:\w\$ '"</span> \
+    <span class="s">"alias ll='ls -lh --color=auto'"</span> \
+    <span class="s">"alias cc='gcc -Wall -Wextra -g'"</span> \
+    | tee -a /etc/bash.bashrc &gt;&gt; /root/.bashrc
+
+<span class="cm"># /so é a pasta do seu computador, montada aqui dentro.</span>
+<span class="k">WORKDIR</span> /so
+<span class="k">CMD</span> [<span class="s">"/bin/bash"</span>]</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Arquivo 2 de 2 — o atalho</h3>
+    <h2>O script <span class="dest">so.sh</span></h2>
+
+    <div class="arq baixo">
+      <div class="arq-nome">⚙️ so-lab/so.sh <span class="tag">Linux e macOS · versão essencial</span></div>
+      <div class="corpo">
+      <pre><span class="cm">#!/usr/bin/env bash</span>
+<span class="cm"># Atalho do laboratório de SO — TADS/IFRN 2026.1</span>
+<span class="cm"># ./so.sh [build | run x.c | limpar]</span>
+<span class="k">set</span> -euo pipefail
+
+IMAGEM=<span class="s">"so-ifrn"</span>
+PASTA=<span class="s">"$(cd "$(dirname "$0")" &amp;&amp; pwd)"</span>
+
+<span class="cm"># -it  terminal interativo</span>
+<span class="cm"># --rm descarta o container ao sair</span>
+<span class="cm"># -v   espelha esta pasta em /so</span>
+<span class="cm"># as duas últimas liberam o ptrace(), sem o qual</span>
+<span class="cm"># gdb e strace não funcionam aqui dentro</span>
+FLAGS=( -it --rm -v <span class="s">"$PASTA"</span>:/so
+        --cap-add=SYS_PTRACE
+        --security-opt seccomp=unconfined
+        --name so-lab )</pre>
+      <pre><span class="cm"># Constrói a imagem se ela ainda não existir.</span>
+docker image inspect <span class="s">"$IMAGEM"</span> &gt;/dev/null 2&gt;&amp;1 \
+  || docker build -t <span class="s">"$IMAGEM"</span> <span class="s">"$PASTA"</span>
+
+<span class="k">case</span> <span class="s">"${1:-shell}"</span> <span class="k">in</span>
+  build)  docker build -t <span class="s">"$IMAGEM"</span> <span class="s">"$PASTA"</span> ;;
+  shell)  docker run <span class="s">"${FLAGS[@]}"</span> <span class="s">"$IMAGEM"</span> ;;
+  run)    BIN=<span class="s">"${2%.*}"</span>
+          docker run <span class="s">"${FLAGS[@]}"</span> <span class="s">"$IMAGEM"</span> bash -c \
+            <span class="s">"gcc -Wall -Wextra -g -pthread -fopenmp \
+              -o $BIN $2 &amp;&amp; ./$BIN"</span> ;;
+  limpar) docker rmi -f <span class="s">"$IMAGEM"</span> ;;
+  *)      <span class="k">echo</span> <span class="s">"use: build | shell | run | limpar"</span>
+          <span class="k">exit</span> 1 ;;
+<span class="k">esac</span></pre>
+      </div>
+    </div>
+
+    <p class="txt-sm">A versão completa — com checagem do Docker, o subcomando <kbd>exec</kbd> e o mapeamento de usuário no Linux — vem no material, junto com o <kbd>so.ps1</kbd> para Windows.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Antes da próxima aula</h3>
+    <h2><span class="dest">Checklist</span> de instalação</h2>
+
+    <div class="passo">
+      <div class="passo-n">1</div>
+      <div class="passo-txt">Instalar o <strong>Docker Desktop</strong> e confirmar com <kbd>docker run hello-world</kbd>.</div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">2</div>
+      <div class="passo-txt">Criar a pasta <kbd>so-lab</kbd> e salvar nela o <strong>Dockerfile</strong> e o <strong>so.sh</strong> (ou <kbd>so.ps1</kbd>).</div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">3</div>
+      <div class="passo-txt">Rodar <kbd>docker build -t so-ifrn .</kbd> — <strong>em casa, com calma</strong>: são minutos de download, e a rede do laboratório não aguenta 30 pessoas baixando ao mesmo tempo.</div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">4</div>
+      <div class="passo-txt">Entrar com <kbd>./so.sh</kbd> e conferir três coisas: <kbd>gcc --version</kbd>, <kbd>man 2 fork</kbd> e <kbd>ls /so</kbd> mostrando os seus arquivos.</div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">5</div>
+      <div class="passo-txt">Rodar <kbd>uname -a</kbd>, <kbd>nproc</kbd> e <kbd>ps aux | wc -l</kbd> <strong>duas vezes</strong> — dentro do container e no seu sistema. <strong>Anote a diferença</strong> e traga para a Aula 02.</div>
+    </div>
+
+    <div class="curiosidade">
+      <div class="cl">🔥 O que essa diferença revela</div>
+      Dentro do container o <kbd>ps aux</kbd> lista <strong>dois ou três</strong> processos. Fora, <strong>trezentos</strong> — e ambos rodam sobre o <em>mesmo</em> kernel, na mesma máquina. A lista de processos, portanto, não é um fato do hardware: é uma <strong>visão</strong> que o kernel constrói para cada namespace. É esse mecanismo que a Unidade 2 detalha.
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAP 9: DÚVIDAS / ENCERRAMENTO ===== -->
+<div class="slide" data-chapter="9">
+  <div class="sc" style="text-align:center;">
+    <img src="images/duvidas.png" alt="Dúvidas?" style="max-height:110px;object-fit:contain;margin:0 auto 6px;display:block;">
+    <h1>Alguma <span class="dest">dúvida</span>?</h1>
+    <p class="txt txt-center" style="max-width:640px;margin:6px auto;">Momento para tirar dúvidas sobre a disciplina, a ementa, as avaliações ou os combinados.</p>
+    <div class="cards" style="margin-top:10px;justify-content:center;">
+      <div class="card" style="max-width:260px;">
+        <span class="card-icon">📧</span>
+        <h4>E-mail do professor</h4>
+        <p style="font-family:var(--mono);font-size:1.44rem;color:var(--ac);">bonfim.aquino@ifrn.edu.br</p>
+      </div>
+      <div class="card" style="max-width:260px;">
+        <span class="card-icon">📅</span>
+        <h4>Próxima aula</h4>
+        <p><strong>Aula 02 — Histórico e evolução:</strong> como os SO nasceram e por que cada geração inventou o que inventou.</p>
+      </div>
+      <div class="card" style="max-width:260px;">
+        <span class="card-icon">📝</span>
+        <h4>Para casa</h4>
+        <p>Montar o <strong>ambiente Docker</strong> e rodar os comandos dentro e fora do container. Anote a diferença.</p>
+      </div>
+    </div>
+    <p class="txt-sm" style="margin-top:12px;color:var(--txt3);text-align:center;">Prof. Dr. Bonfim Aquino — IFRN — Sistemas Operacionais — TADS — 2026.1</p>
+  </div>
+</div>
+
+</div><!-- /slides-area -->
+
+<!-- NAV ARROWS -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="btnPrev" title="Slide anterior (←)">&#8592;</button>
+  <button class="nav-btn" id="btnNext" title="Próximo slide (→)">&#8594;</button>
+</div>
+
+<!-- CHAPTER DOTS INDICATOR -->
+<div class="chapter-indicator">
+  <div class="chapter-dots" id="chapterDots"></div>
+</div>
+
+<script>
+const slides  = document.querySelectorAll('.slide'),
+      navs    = document.querySelectorAll('.nav-item'),
+      ctr     = document.getElementById('counter'),
+      fill    = document.getElementById('fill'),
+      btnPrev = document.getElementById('btnPrev'),
+      btnNext = document.getElementById('btnNext'),
+      dotsCtn = document.getElementById('chapterDots');
+
+let cur   = 0;
+const total = slides.length;
+
+const chapterMap = {};
+slides.forEach((s, i) => {
+  const ch = s.dataset.chapter;
+  if (!chapterMap[ch]) chapterMap[ch] = [];
+  chapterMap[ch].push(i);
+});
+
+navs.forEach(nav => {
+  const ch = nav.dataset.chapter;
+  const badge = nav.querySelector('.sub-count');
+  if (badge && chapterMap[ch]) {
+    const count = chapterMap[ch].length;
+    badge.textContent = count > 1 ? count : '';
+  }
+});
+
+function renderDots() {
+  const ch = slides[cur].dataset.chapter;
+  const indices = chapterMap[ch] || [];
+  dotsCtn.innerHTML = '';
+  if (indices.length <= 1) { dotsCtn.parentElement.style.opacity = '0'; return; }
+  dotsCtn.parentElement.style.opacity = '1';
+  const pos = indices.indexOf(cur);
+  const lbl = document.createElement('span');
+  lbl.className = 'ch-label';
+  lbl.textContent = (pos + 1) + '/' + indices.length;
+  dotsCtn.appendChild(lbl);
+  indices.forEach((slideIdx, dotIdx) => {
+    const dot = document.createElement('span');
+    dot.className = 'ch-dot' + (slideIdx === cur ? ' active' : '');
+    dot.title = 'Slide ' + (dotIdx + 1) + ' de ' + indices.length;
+    dot.addEventListener('click', () => go(slideIdx));
+    dotsCtn.appendChild(dot);
+  });
+}
+
+function updateArrows() {
+  btnPrev.classList.toggle('disabled', cur === 0);
+  btnNext.classList.toggle('disabled', cur === total - 1);
+}
+
+function go(n) {
+  if (n < 0 || n >= total) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  ctr.textContent = (cur + 1) + '/' + total;
+  fill.style.width = ((cur + 1) / total * 100) + '%';
+  const ch = slides[cur].dataset.chapter;
+  navs.forEach(v => { v.classList.toggle('active', v.dataset.chapter === ch); });
+  slides[cur].scrollTop = 0;
+  renderDots();
+  updateArrows();
+}
+
+function goTo(ch) {
+  for (let i = 0; i < total; i++) {
+    if (slides[i].dataset.chapter == ch) { go(i); return; }
+  }
+}
+
+btnPrev.addEventListener('click', () => go(cur - 1));
+btnNext.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+  if (e.key === 'ArrowLeft') go(cur - 1);
+  if (e.key === 'Home') go(0);
+  if (e.key === 'End') go(total - 1);
+});
+
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const d = e.changedTouches[0].clientX - tx;
+  if (d < -50) go(cur + 1);
+  if (d > 50) go(cur - 1);
+});
+
+go(0);
+</script>
+</body>
+</html>

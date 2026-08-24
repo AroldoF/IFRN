@@ -1,0 +1,222 @@
+{
+  "main": {
+    "id": "02043f4430edb687",
+    "type": "split",
+    "children": [
+      {
+        "id": "8e1d1338067a7fab",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "af5beae2b346b3dd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DSC/java fundamentos/Anotações.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Anotações"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "abac55c772873623",
+    "type": "split",
+    "children": [
+      {
+        "id": "18d51cea1e3d47b9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1ef21eb016ab861f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "5cd61945d1eb3c01",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "2ad78a7393812a1c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6f7e061a153b4a78",
+    "type": "split",
+    "children": [
+      {
+        "id": "d990e05004391f4e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbc8247b98575e0b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos para README"
+            }
+          },
+          {
+            "id": "315ae1a70c0b04eb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída para README"
+            }
+          },
+          {
+            "id": "608f958a6793bd5b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "129015ce977fc6ce",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "63fea71631dae1f1",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário de README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "af5beae2b346b3dd",
+  "lastOpenFiles": [
+    "EDNL/arvores/atividades/src/bin/blacklist.rs",
+    "EDNL/arvores/atividades/target/debug/deps/q3-381189225765fff4",
+    "EDNL/arvores/atividades/target/debug/deps/rustckvaHiX/symbols.o",
+    "EDNL/arvores/atividades/target/debug/deps/rustckvaHiX/raw-dylibs",
+    "EDNL/arvores/atividades/target/debug/deps/rustckvaHiX",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/work-products.bin",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/query-cache.bin",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/diu0tfwtsl3i8hz2i8bziaiyc.o",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/dg8ej2a0vvir0xm2do6645j81.o",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/dep-graph.bin",
+    "EDNL/arvores/atividades/target/debug/incremental/q3-2tsjdqd0m23f4/s-hlne4xv07k-0ufe9vh-6myet0euzyw703owvfznl9kr2/cuovc6ztvfop0rxh86kcs5x23.o",
+    "README.md",
+    "DSC/Introdução.md",
+    "DSC/java fundamentos/Anotações.md",
+    "TS/Teste de Software - Aula 01/atividade/Incidente de Exclusão do Banco de Dados de Produção do GitLab (2017).md",
+    "TS/Teste de Software - Aula 01/Incidente de Exclusão do Banco de Dados de Produção do GitLab (2017).md",
+    "SO/Aula 02/Evolução dos Sistemas Operacionais.md",
+    "PLP/Introdução.md",
+    "TS/Teste de Software - Aula 01/Atividade 01 - Falhas de Software Importantes.md",
+    "TS/Teste de Software - Aula 01/Anotações - Teste de Software.md",
+    "SO/Aula 01/Atividade 01.md",
+    "SO/Sem título.md",
+    "GP/Aula 01 - Cargos em TI atuação e valores associados/Atividade 01.md",
+    "GP/Aula 01 - Cargos em TI atuação e valores associados/Markdown_corrigido.md",
+    "GP/Introdução.md",
+    "PLP/inicios das linguagens de Programação.md",
+    "README.sync-conflict-20260808-224039-R6GH6KN.md",
+    "GP/README.md"
+  ]
+}

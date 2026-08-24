@@ -1,0 +1,194 @@
+{
+  "main": {
+    "id": "329b46c1fccdd255",
+    "type": "split",
+    "children": [
+      {
+        "id": "c190d161c70abca6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "717641f4405218cf",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "SO/Aula 01/Atividade Prática 01.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Atividade Prática 01"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4e184315dbd1f7f3",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "9e170cdc1a4cb0d4",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-folder-closed",
+          "title": "Explorador de arquivos"
+        }
+      },
+      {
+        "id": "6b3925eaa55aedfb",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "Procurar"
+        }
+      },
+      {
+        "id": "586c9249120445b1",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-tags",
+          "title": "Etiquetas"
+        }
+      },
+      {
+        "id": "40a9e3fad9c0760d",
+        "type": "leaf",
+        "state": {
+          "type": "all-properties",
+          "state": {
+            "sortOrder": "frequency",
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-archive",
+          "title": "Todas as propriedades"
+        }
+      },
+      {
+        "id": "ee1ee6264c1dc00a",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-bookmark",
+          "title": "Marcadores"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "170286aa96c27dc1",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "3e3454f8bba7a21a",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "GP/Aula 01 - Cargos em TI atuação e valores associados/Atividade 01.pdf",
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "Links inversos"
+        }
+      },
+      {
+        "id": "1f7bba4a8606b6f8",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "GP/Aula 01 - Cargos em TI atuação e valores associados/Atividade 01.pdf",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "Links de saída"
+        }
+      },
+      {
+        "id": "51f893e23ff47252",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "GP/Aula 01 - Cargos em TI atuação e valores associados/Atividade 01.pdf",
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "Sumário"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "9e170cdc1a4cb0d4",
+  "lastOpenFiles": [
+    "SO/Aula 02/Evolução dos Sistemas Operacionais.md",
+    "EDNL/arvores/arvores.html",
+    "GP/Aula 01 - Cargos em TI atuação e valores associados/Atividade 01.pdf",
+    "SO/Aula 02",
+    "EDNL/arvores/atividades/target/debug/incremental/abb-2fdoh4ykz9cim/s-hlhkhqvtzs-19rf18b-0wzx5m27xlo0a488u9sbsxwap",
+    "EDNL/arvores/atividades/target/debug/incremental/q1-1td03iwquv945/s-hlhnisnqkp-0xhzugy-11z0czuxd2xcxsyhlqcd50wm0",
+    "EDNL/arvores/atividades/target/debug/incremental/q1-1td03iwquv945/s-hlhnbm0rxp-0603duq-63kbs5hfwn6p35p02gu08camc",
+    "EDNL/arvores/atividades/target/debug/incremental/atividades-088r8b7sp3q7j",
+    "EDNL/arvores/atividades/target/debug/incremental/abb-2fdoh4ykz9cim",
+    "EDNL/arvores/atividades/target/debug/incremental/q1-1td03iwquv945",
+    "EDNL/arvores/atividades/target/debug/incremental",
+    "PLP/Introdução.md",
+    "PLP/inicios das linguagens de Programação.md",
+    "DSC/Introdução.md",
+    "GP/README.md",
+    "TS/Teste de Software - Aula 01/Anotações - Teste de Software.md",
+    "SO/Aula 01/Atividade 01.md"
+  ]
+}

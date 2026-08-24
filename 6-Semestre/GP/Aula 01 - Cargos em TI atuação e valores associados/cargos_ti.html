@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 01 — Cargos em TI: atuação e valores associados | Gerência de Projetos — TADS/IFRN</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --if-verde:#2f9e41; --if-vermelho:#cd191e;
+  --bg:#ffffff; --bg2:#f5f7fa; --bg3:#edf0f5; --bg-dest:#e3ecfc;
+  --txt:#1e1e1e; --txt2:#444; --txt3:#666; --tit:#0d0d0d;
+  --ac:#1d5fc4; --ac2:#3b82f6; --verm:#c62828;
+  --verde:#16a34a; --amarelo:#b45309; --roxo:#7c3aed;
+  --brd:#cdd5e0; --rad:10px; --trans:0.3s ease;
+  --fonte:'Raleway',sans-serif; --mono:'Fira Code','Consolas',monospace;
+  --cab-h:78px; --sidebar-w:210px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--fonte);background:var(--bg);color:var(--txt);overflow:hidden;height:100vh;}
+::selection{background:var(--ac);color:#fff;}
+
+.barra-if{position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--if-verde) 0%,var(--if-verde) 85%,var(--if-vermelho) 85%);z-index:300;}
+.cab{position:fixed;top:4px;left:0;right:0;display:flex;align-items:center;gap:12px;padding:6px 20px;background:var(--bg2);border-bottom:1px solid var(--brd);z-index:200;height:calc(var(--cab-h) - 4px);}
+.cab img{height:50px;background:#fff;padding:2px 4px;border-radius:3px;}
+.cab .cnt{margin-left:auto;font-size:1.62rem;color:var(--txt3);font-weight:700;}
+.cab-breadcrumb{display:flex;align-items:center;gap:0;margin-left:4px;flex:1;min-width:0;}
+.cab-breadcrumb .current{font-size:1.4rem;font-weight:500;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.sidebar{position:fixed;left:0;top:var(--cab-h);width:var(--sidebar-w);height:calc(100vh - var(--cab-h));background:var(--bg2);border-right:1px solid var(--brd);padding:12px 0;overflow-y:auto;z-index:100;}
+.sidebar::-webkit-scrollbar{width:3px;} .sidebar::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:1rem;color:var(--txt3);cursor:pointer;transition:all var(--trans);border-left:3px solid transparent;font-weight:500;line-height:1.3;}
+.nav-item:hover{background:rgba(29,95,196,.07);color:var(--txt);}
+.nav-item.active{color:var(--ac);border-left-color:var(--ac);background:rgba(29,95,196,.1);font-weight:700;}
+.nav-item span{font-size:1.1rem;flex-shrink:0;}
+.nav-item .sub-count{margin-left:auto;font-size:.85rem;background:var(--brd);color:var(--txt2);padding:2px 7px;border-radius:10px;font-weight:700;min-width:22px;text-align:center;}
+.nav-item.active .sub-count{background:rgba(29,95,196,.2);color:var(--ac);}
+
+.progress{position:fixed;bottom:0;left:var(--sidebar-w);right:0;height:3px;background:var(--brd);z-index:200;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1e40af,var(--ac2));transition:width .4s ease;width:0%;}
+
+.nav-arrows{position:fixed;bottom:24px;right:28px;display:flex;align-items:center;gap:14px;z-index:200;}
+.nav-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--brd);background:var(--bg2);color:var(--txt);font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--trans);box-shadow:0 2px 10px rgba(0,0,0,.12);}
+.nav-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(29,95,196,.1);box-shadow:0 4px 16px rgba(29,95,196,.2);}
+.nav-btn:active{transform:scale(.92);}
+.nav-btn.disabled{opacity:.2;pointer-events:none;}
+
+.chapter-indicator{position:fixed;bottom:24px;left:var(--sidebar-w);right:0;display:flex;justify-content:center;align-items:center;gap:10px;z-index:199;pointer-events:none;}
+.chapter-dots{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.95);border:1px solid var(--brd);padding:12px 24px;border-radius:24px;pointer-events:all;box-shadow:0 2px 12px rgba(0,0,0,.12);}
+.ch-dot{width:14px;height:14px;border-radius:50%;background:var(--brd);cursor:pointer;transition:all var(--trans);}
+.ch-dot.active{background:var(--ac);transform:scale(1.35);box-shadow:0 0 8px rgba(29,95,196,.4);}
+.ch-dot:hover{background:var(--ac2);}
+.ch-label{font-size:1.5rem;color:var(--txt);margin-right:8px;font-weight:700;white-space:nowrap;}
+
+.slides-area{position:fixed;top:var(--cab-h);left:var(--sidebar-w);right:0;bottom:3px;overflow:hidden;}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:16px 20px 96px;opacity:0;transform:translateX(30px);transition:opacity .4s ease,transform .4s ease;pointer-events:none;overflow-y:auto;overflow-x:hidden;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide::-webkit-scrollbar{width:6px;} .slide::-webkit-scrollbar-thumb{background:var(--brd);border-radius:4px;}
+
+.sc{max-width:100%;width:100%;margin:0;}
+.sc.section-slide{margin:auto 0;}
+.sc.title-slide{margin:auto 0;text-align:center;}
+
+h1{font-size:4.4rem;font-weight:800;color:var(--tit);line-height:1.1;margin-bottom:10px;}
+h2{font-size:3.1rem;font-weight:700;color:var(--tit);line-height:1.1;margin-bottom:5px;}
+h3.label{font-size:1.4rem;text-transform:uppercase;letter-spacing:3px;color:var(--ac);font-weight:700;margin-bottom:6px;}
+h4{font-size:1.85rem;font-weight:700;color:var(--tit);margin-bottom:5px;}
+
+.txt{font-size:1.65rem;line-height:1.5;color:var(--txt);margin-bottom:7px;text-align:justify;}
+.txt strong{color:var(--tit);font-weight:700;}
+.txt-sm{font-size:1.5rem;line-height:1.5;color:var(--txt2);margin-bottom:6px;text-align:justify;}
+ul.lista,ol.lista{margin:6px 0 6px 22px;font-size:1.44rem;line-height:1.55;color:var(--txt2);}
+ul.lista li,ol.lista li{margin-bottom:3px;}
+ul.lista li strong,ol.lista li strong{color:var(--tit);}
+
+.dest{background:linear-gradient(135deg,#1e3a8a,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;}
+
+/* ===== CALLOUTS ===== */
+.analogia,.curiosidade,.dica,.sucesso,.erro,.def{border-radius:0 var(--rad) var(--rad) 0;padding:8px 14px;margin:7px 0;font-size:1.4rem;line-height:1.45;color:var(--txt);}
+.analogia{background:var(--bg-dest);border-left:4px solid var(--ac);}
+.curiosidade{background:rgba(198,40,40,.07);border-left:4px solid var(--verm);}
+.dica{background:rgba(29,95,196,.07);border-left:4px solid var(--ac);}
+.sucesso{background:rgba(22,163,74,.08);border-left:4px solid var(--verde);}
+.erro{background:rgba(180,83,9,.09);border-left:4px solid var(--amarelo);}
+.def{background:rgba(124,58,237,.07);border-left:4px solid var(--roxo);}
+.analogia .al,.curiosidade .cl,.dica .dl,.sucesso .sl,.erro .el,.def .dfl{font-size:1.2rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px;}
+.analogia .al{color:var(--ac);} .curiosidade .cl{color:var(--verm);} .dica .dl{color:var(--ac);}
+.sucesso .sl{color:var(--verde);} .erro .el{color:var(--amarelo);} .def .dfl{color:var(--roxo);}
+
+/* ===== LAYOUT ===== */
+.cards{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:7px 0;}
+.card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:10px;flex:1;min-width:220px;max-width:300px;transition:all var(--trans);}
+.card:hover{border-color:var(--ac);transform:translateY(-2px);}
+.card-icon{font-size:2.1rem;display:block;margin-bottom:4px;}
+.card h4{font-size:1.4rem;margin-bottom:2px;}
+.card .cbo{font-family:var(--mono);font-size:1.02rem;color:var(--txt3);display:block;margin-bottom:4px;}
+.card p{font-size:1.24rem;line-height:1.4;color:var(--txt2);margin-bottom:3px;}
+.card .valor{font-size:1.2rem;line-height:1.35;color:var(--verde);font-weight:600;border-top:1px dashed var(--brd);padding-top:4px;margin-top:4px;}
+.two-col{display:flex;flex-wrap:wrap;gap:9px;margin:7px 0;}
+.three-col{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:7px 0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:7px 0;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:7px 0;}
+
+.vs{display:flex;gap:10px;align-items:stretch;margin:7px auto;max-width:100%;flex-wrap:wrap;}
+.vs-col{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:9px 12px;flex:1;min-width:220px;}
+.vs-col ul{list-style:none;padding:0;margin-top:4px;}
+.vs-col li{padding:3px 0;font-size:1.3rem;line-height:1.4;color:var(--txt2);border-bottom:1px solid var(--brd);}
+.vs-col li:last-child{border:none;}
+.vs-div{display:flex;align-items:center;font-weight:800;font-size:1.5rem;color:var(--txt3);}
+
+.items{display:flex;flex-direction:column;gap:4px;margin:7px 0;}
+.it{display:flex;align-items:flex-start;gap:9px;background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:7px 11px;font-size:1.4rem;line-height:1.4;color:var(--txt);}
+.it-icon{font-size:1.6rem;flex-shrink:0;margin-top:1px;}
+
+.tbl{width:100%;border-collapse:collapse;margin:7px 0;font-size:1.3rem;}
+.tbl th{background:var(--bg-dest);color:var(--ac);padding:5px 10px;text-align:left;font-weight:700;font-size:1.14rem;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ac);}
+.tbl td{padding:5px 10px;border-bottom:1px solid var(--brd);color:var(--txt);line-height:1.35;}
+.tbl tr:hover td{background:rgba(29,95,196,.05);}
+.tbl td strong{color:var(--tit);}
+.tbl.compacta{font-size:1.14rem;} .tbl.compacta td,.tbl.compacta th{padding:3px 8px;}
+.tbl td.mono,.tbl th.mono{font-family:var(--mono);}
+.tbl .num{font-family:var(--mono);text-align:right;}
+.tbl .src{font-size:1rem;color:var(--txt3);font-style:italic;}
+
+.title-slide .inst{font-size:1.3rem;text-transform:uppercase;letter-spacing:4px;color:var(--txt3);margin-bottom:16px;}
+.title-slide h1{font-size:4.6rem;margin-bottom:10px;}
+.title-slide .sub{font-size:1.75rem;color:var(--txt2);font-weight:300;margin-bottom:12px;}
+.title-slide .prof{font-size:1.44rem;color:var(--txt3);margin-top:10px;}
+.title-slide .badge{display:inline-block;background:var(--bg-dest);border:1px solid var(--ac);color:var(--ac);padding:6px 18px;border-radius:20px;font-size:1.3rem;font-weight:600;margin-top:8px;}
+.section-slide{text-align:center;}
+.section-slide .big-icon{font-size:5.2rem;margin-bottom:12px;}
+.section-slide h1{font-size:4rem;}
+.section-slide .sub{font-size:1.55rem;color:var(--txt2);font-weight:300;margin-top:6px;max-width:820px;margin-left:auto;margin-right:auto;line-height:1.5;}
+
+kbd{background:var(--bg3);border:1px solid var(--brd);border-radius:3px;padding:2px 8px;font-family:var(--mono);font-size:1.3rem;}
+.verm{color:var(--verm);} .verd{color:var(--verde);} .amar{color:var(--amarelo);} .azul{color:var(--ac);}
+
+/* ===== TIMELINE ===== */
+.timeline{display:flex;flex-direction:column;gap:0;margin:7px 0;position:relative;}
+.timeline::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:2px;background:var(--brd);}
+.tl-item{display:flex;gap:10px;padding:4px 0;position:relative;}
+.tl-dot{width:40px;height:40px;border-radius:50%;background:var(--bg-dest);border:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;z-index:1;}
+.tl-body{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:6px 10px;flex:1;}
+.tl-body h4{font-size:1.34rem;font-weight:700;color:var(--tit);margin-bottom:1px;}
+.tl-body p{font-size:1.2rem;color:var(--txt2);line-height:1.35;margin:0;}
+.tl-tag{font-size:1.02rem;background:rgba(29,95,196,.12);color:var(--ac);padding:1px 7px;border-radius:10px;font-weight:700;display:inline-block;margin-bottom:1px;}
+
+/* --- Notas numeradas (lista de exercícios) --- */
+.notas{display:flex;flex-direction:column;gap:5px;margin:6px 0 7px;}
+.nota{display:flex;gap:9px;align-items:flex-start;font-size:1.3rem;line-height:1.42;color:var(--txt2);background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:7px 11px;}
+.nota .num{flex:0 0 24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.nota strong{color:var(--tit);}
+.nota .alt{display:block;color:var(--txt3);font-size:1.2rem;margin-top:2px;}
+
+/* --- Quiz --- */
+.quiz{background:var(--bg-dest);border:1px solid var(--ac);border-radius:var(--rad);padding:9px 13px;margin:7px 0;}
+.quiz-q{font-size:1.4rem;font-weight:700;color:var(--tit);line-height:1.4;margin-bottom:5px;}
+.quiz-q::before{content:'❓ ';}
+.quiz-alts{display:flex;flex-direction:column;gap:3px;margin-bottom:5px;}
+.quiz-alt{font-size:1.3rem;color:var(--txt2);background:#fff;border:1px solid var(--brd);border-radius:6px;padding:4px 9px;cursor:pointer;transition:all var(--trans);}
+.quiz-alt:hover{border-color:var(--ac);background:rgba(29,95,196,.06);}
+.quiz-alt.ok{border-color:var(--verde);background:rgba(22,163,74,.1);color:var(--verde);font-weight:600;}
+.quiz-alt.no{border-color:var(--verm);background:rgba(198,40,40,.08);color:var(--verm);text-decoration:line-through;}
+.quiz-btn{background:var(--ac);color:#fff;border:none;border-radius:6px;padding:6px 15px;font-family:var(--fonte);font-size:1.24rem;font-weight:700;cursor:pointer;transition:all var(--trans);}
+.quiz-btn:hover{background:var(--ac2);}
+.quiz-r{display:none;margin-top:5px;padding-top:5px;border-top:1px dashed var(--ac);font-size:1.3rem;line-height:1.4;color:var(--txt);}
+.quiz-r.show{display:block;}
+.quiz-r b{color:var(--verde);}
+
+/* --- Exercício resolvido --- */
+.exerc{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rad);padding:9px 13px;margin:7px 0;}
+.exerc-t{font-size:1.2rem;text-transform:uppercase;letter-spacing:2px;color:var(--roxo);font-weight:700;margin-bottom:4px;}
+.exerc-e{font-size:1.34rem;line-height:1.42;color:var(--txt);margin-bottom:5px;}
+.exerc-s{font-size:1.26rem;line-height:1.44;color:var(--txt2);border-top:1px dashed var(--brd);padding-top:5px;}
+.exerc-s b{color:var(--tit);}
+
+/* --- Estimador interativo --- */
+.sim{background:var(--bg2);border:2px solid var(--ac);border-radius:var(--rad);padding:9px 13px;margin:7px 0;}
+.sim-cab{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px;}
+.sim-tit{font-size:1.3rem;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:1px;}
+.sim-ctrl{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.sim-in,select.sim-in{font-family:var(--fonte);font-size:1.24rem;padding:4px 9px;border:1px solid var(--brd);border-radius:6px;background:#fff;}
+.sim-out{font-size:1.3rem;line-height:1.45;color:var(--txt2);}
+.sim-lab{font-size:1.2rem;font-weight:700;color:var(--txt2);}
+
+.kpi{display:flex;gap:9px;flex-wrap:wrap;margin:7px 0;}
+.kpi-b{flex:1;min-width:140px;background:#fff;border:1px solid var(--brd);border-radius:var(--rad);padding:5px 9px;text-align:center;}
+.kpi-b .kv{font-size:1.8rem;font-weight:800;color:var(--ac);line-height:1.15;font-family:var(--mono);}
+.kpi-b .kl{font-size:1.02rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+
+.barra{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:1.14rem;font-family:var(--mono);white-space:nowrap;}
+.barra .bn{flex:0 0 110px;color:var(--txt2);font-weight:700;white-space:normal;font-family:var(--fonte);font-size:1.14rem;}
+.barra .bw{flex:1;height:16px;background:var(--bg3);border:1px solid var(--brd);border-radius:4px;overflow:hidden;}
+.barra .bf{height:100%;background:linear-gradient(90deg,#1e40af,var(--ac2));transition:width .3s ease;}
+.barra .bp{flex:0 0 110px;text-align:right;color:var(--ac);font-weight:700;}
+
+/* Resumo final */
+.resumo{display:flex;flex-direction:column;gap:4px;margin:7px 0;}
+.res-i{display:flex;gap:9px;align-items:flex-start;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.3);border-radius:var(--rad);padding:7px 11px;font-size:1.3rem;line-height:1.4;color:var(--txt);}
+.res-i .rn{flex:0 0 24px;height:24px;border-radius:50%;background:var(--verde);color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+
+/* Referências */
+.refs{font-size:1.24rem;line-height:1.5;color:var(--txt2);margin:5px 0;}
+.refs li{margin-bottom:4px;margin-left:20px;}
+.refs b{color:var(--tit);}
+.refs .fonte{font-size:1.05rem;color:var(--txt3);font-style:italic;}
+
+@media(max-width:900px){
+  .sidebar{width:160px;} :root{--sidebar-w:160px;}
+  h1{font-size:3rem;} h2{font-size:2.3rem;}
+  .slide{padding:20px 18px 80px;}
+  .grid2,.grid3{grid-template-columns:1fr;}
+}
+@media(max-width:640px){
+  .sidebar{display:none;} :root{--sidebar-w:0px;}
+  .slide{padding:16px 14px 80px;}
+}
+</style>
+</head>
+<body>
+
+<div class="barra-if"></div>
+<div class="cab">
+  <img src="images/logo-horizontal.png" alt="IFRN">
+  <div class="cab-breadcrumb">
+    <span class="current">Gerência de Projetos · Aula 01 — Cargos em TI: atuação e valores associados</span>
+  </div>
+  <span class="cnt" id="counter">1/1</span>
+</div>
+
+<nav class="sidebar">
+  <div class="nav-item active" data-chapter="0" onclick="goTo(0)"><span>🏠</span> Abertura<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="1" onclick="goTo(1)"><span>🗺️</span> Panorama<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="2" onclick="goTo(2)"><span>🛠️</span> Técnicos e suporte<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="3" onclick="goTo(3)"><span>💻</span> Dev. e dados<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="4" onclick="goTo(4)"><span>🌐</span> Infra e segurança<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="5" onclick="goTo(5)"><span>👔</span> Gestão e liderança<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="6" onclick="goTo(6)"><span>🧭</span> Trilhas e certificações<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="7" onclick="goTo(7)"><span>💰</span> Valores associados<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="8" onclick="goTo(8)"><span>🏢</span> Aplicações práticas<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="9" onclick="goTo(9)"><span>✍️</span> Exercícios<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="10" onclick="goTo(10)"><span>📌</span> Resumo<span class="sub-count"></span></div>
+  <div class="nav-item" data-chapter="11" onclick="goTo(11)"><span>📖</span> Referências<span class="sub-count"></span></div>
+</nav>
+
+<div class="progress"><div class="progress-fill" id="fill"></div></div>
+
+<div class="slides-area">
+
+<!-- ===================== CAP 0 — ABERTURA ===================== -->
+<div class="slide active" data-chapter="0">
+  <div class="sc title-slide">
+    <p class="inst">Instituto Federal do Rio Grande do Norte — Tecnologia em Análise e Desenvolvimento de Sistemas</p>
+    <h1>Cargos em TI: <span class="dest">atuação e valores</span> associados</h1>
+    <p class="sub">Quem faz o quê em um time de TI — e o que cada papel vale</p>
+    <p class="prof">Aula 01 · Prof. Bonfim Aquino — IFRN — 2026.2</p>
+    <span class="badge">Ambientação · antes da Unidade 1 da ementa</span>
+  </div>
+</div>
+
+<div class="slide" data-chapter="0">
+  <div class="sc">
+    <h3 class="label">Onde estamos</h3>
+    <h2>O <span class="dest">roteiro</span> de hoje</h2>
+
+    <div class="items">
+      <div class="it"><span class="it-icon">1️⃣</span><span>Por que TI tem tantos cargos — a lógica da <strong>cadeia de valor</strong> (Porter).</span></div>
+      <div class="it"><span class="it-icon">2️⃣</span><span>Os <strong>15 cargos</strong> do Guia <strong>Brasscom</strong> (2017): atuação e certificações.</span></div>
+      <div class="it"><span class="it-icon">3️⃣</span><span>Trilha de carreira do técnico ao diretor — com o <strong>Gerente de Projetos de TI</strong> em destaque.</span></div>
+      <div class="it"><span class="it-icon">4️⃣</span><span>Valores associados: o que cada papel entrega, e a <strong>Tabela Salarial de TI 2026</strong>.</span></div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Por quê começar aqui</div>
+      A ementa começa no item 1 — conceitos de gestão de projetos. Esta aula é a ambientação: antes de escopo, prazo e risco, é preciso saber <em>com quem</em> um gerente de projetos de TI trabalha.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="0">
+  <div class="sc">
+    <h3 class="label">Objetivos de aprendizagem</h3>
+    <h2>Ao final desta aula, você será capaz de…</h2>
+
+    <div class="items">
+      <div class="it"><span class="it-icon">✅</span><span><strong>Nomear</strong> os principais cargos de TI, técnicos e de gestão.</span></div>
+      <div class="it"><span class="it-icon">✅</span><span><strong>Classificar</strong> um cargo como suporte ou atividade primária (Porter).</span></div>
+      <div class="it"><span class="it-icon">✅</span><span><strong>Explicar o valor</strong> de cada cargo — o que quebra se ele faltar.</span></div>
+      <div class="it"><span class="it-icon">✅</span><span><strong>Situar</strong> o Gerente de Projetos de TI na trilha de carreira.</span></div>
+      <div class="it"><span class="it-icon">✅</span><span><strong>Ler</strong> uma tabela salarial de mercado com senso crítico.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 1 — PANORAMA ===================== -->
+<div class="slide" data-chapter="1">
+  <div class="sc section-slide">
+    <span class="big-icon">🗺️</span>
+    <h1>Por que <span class="dest">tantos cargos</span> existem?</h1>
+    <p class="sub">"Trabalha com TI" diz tão pouco quanto "trabalha com saúde". Vamos organizar com uma ferramenta clássica: a cadeia de valor.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="1">
+  <div class="sc">
+    <h3 class="label">A ferramenta usada pela Brasscom para organizar os cargos</h3>
+    <h2>A <span class="dest">cadeia de valor</span> de Porter</h2>
+
+    <div class="vs">
+      <div class="vs-col" style="border-color:rgba(180,83,9,.4);background:rgba(180,83,9,.05);">
+        <h4 style="color:var(--amarelo);">🧩 Suporte</h4>
+        <p class="txt-sm" style="margin:0 0 3px;">Não gera receita direta.</p>
+        <ul><li>Infraestrutura</li><li>Gestão de pessoas</li><li><strong>Desenvolvimento tecnológico</strong></li><li>Compras</li></ul>
+      </div>
+      <div class="vs-div">×</div>
+      <div class="vs-col" style="border-color:rgba(22,163,74,.4);background:rgba(22,163,74,.05);">
+        <h4 style="color:var(--verde);">💵 Primária</h4>
+        <p class="txt-sm" style="margin:0 0 3px;">Gera receita direta.</p>
+        <ul><li>Logística</li><li>Operações</li><li>Marketing e vendas</li><li><strong>Pós-vendas</strong></li></ul>
+      </div>
+    </div>
+
+    <div class="def">
+      <div class="dfl">📐 A pegadinha</div>
+      Numa fábrica, "desenvolver sistemas" é suporte. Numa empresa de software, é <strong>atividade primária</strong>. O mesmo cargo tem valor estratégico diferente conforme o produto da empresa.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="1">
+  <div class="sc">
+    <h3 class="label">O material desta aula</h3>
+    <h2>15 cargos, <span class="dest">um guia oficial</span></h2>
+
+    <p class="txt-sm">Os cargos de hoje vêm do <strong>Guia de Funções de TIC no Brasil</strong> (Brasscom, 2ª ed., 2017): os 15 cargos mais contratados do setor, com código <strong>CBO</strong>, atuação, formação e certificações.</p>
+
+    <div class="kpi">
+      <div class="kpi-b"><div class="kv">15</div><div class="kl">cargos mapeados</div></div>
+      <div class="kpi-b"><div class="kv">5</div><div class="kl">níveis de carreira</div></div>
+      <div class="kpi-b"><div class="kv">10</div><div class="kl">habilidades comportamentais</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot">🔧</div><div class="tl-body"><span class="tl-tag">execução</span><h4>Técnico / Programador</h4><p>Equipamento, atendimento, código.</p></div></div>
+      <div class="tl-item"><div class="tl-dot">🧭</div><div class="tl-body"><span class="tl-tag">análise</span><h4>Analista / Administrador</h4><p>Solução, redes, dados, segurança.</p></div></div>
+      <div class="tl-item"><div class="tl-dot">👔</div><div class="tl-body"><span class="tl-tag">gestão</span><h4>Gerente</h4><p>Prazo, custo, qualidade, pessoas.</p></div></div>
+      <div class="tl-item"><div class="tl-dot">🏛️</div><div class="tl-body"><span class="tl-tag">direção</span><h4>Diretor</h4><p>Estratégia e resultado financeiro.</p></div></div>
+    </div>
+
+    <div class="curiosidade">
+      <div class="cl">🔥 Detalhe</div>
+      O guia é de 2017: ainda não existiam "Product Owner" ou "Scrum Master" como cargos formais. TI cria cargos mais rápido que as classificações oficiais acompanham (volte a isto no exercício 10).
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 2 — TÉCNICOS E SUPORTE ===================== -->
+<div class="slide" data-chapter="2">
+  <div class="sc section-slide">
+    <span class="big-icon">🛠️</span>
+    <h1>Cargos <span class="dest">técnicos</span> e de suporte</h1>
+    <p class="sub">A porta de entrada mais comum: manter o equipamento e atender quem usa.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="2">
+  <div class="sc">
+    <h3 class="label">CBO 313220 · 317210 · 317110 · 212420</h3>
+    <h2>Quatro papéis de <span class="dest">execução e sustentação</span></h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🔩</span>
+        <h4>Técnico em Manutenção de Equipamentos</h4>
+        <span class="cbo">CBO 313220</span>
+        <p>Instala, configura e conserta hardware; controla estoque.</p>
+        <p class="valor">💎 Mantém o parque de máquinas no ar.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎧</span>
+        <h4>Técnico de Apoio ao Usuário (Helpdesk)</h4>
+        <span class="cbo">CBO 317210</span>
+        <p>Primeiro contato; triagem por SLA; registra chamados.</p>
+        <p class="valor">💎 Filtra o que precisa de um especialista.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⌨️</span>
+        <h4>Programador de Sistemas de Informação</h4>
+        <span class="cbo">CBO 317110</span>
+        <p>Desenvolve, testa e corrige conforme especificação.</p>
+        <p class="valor">💎 Transforma a especificação em código.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🖥️</span>
+        <h4>Analista de Suporte Computacional</h4>
+        <span class="cbo">CBO 212420 · MCSA/MCSE</span>
+        <p>Logs, backup, controle de acesso, produção.</p>
+        <p class="valor">💎 Garante que o que está no ar continue no ar.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="2">
+  <div class="sc">
+    <h3 class="label">Checkpoint</h3>
+    <h2>Quem <span class="dest">investiga</span> a causa?</h2>
+
+    <div class="quiz">
+      <div class="quiz-q">Um sistema em produção fica lento intermitentemente. Quem investiga logs e configuração do ambiente?</div>
+      <div class="quiz-alts">
+        <div class="quiz-alt" onclick="marcar(this)">a) Técnico em Manutenção de Equipamentos</div>
+        <div class="quiz-alt" onclick="marcar(this)">b) Programador de Sistemas de Informação</div>
+        <div class="quiz-alt" data-ok="1" onclick="marcar(this)">c) Analista de Suporte Computacional</div>
+        <div class="quiz-alt" onclick="marcar(this)">d) Técnico de Apoio ao Usuário (Helpdesk)</div>
+      </div>
+      <button class="quiz-btn" onclick="verResp(this)">Ver resposta</button>
+      <div class="quiz-r"><b>Resposta: (c).</b> Logs, produção e ambiente são atribuição do Analista de Suporte Computacional. O Helpdesk (d) registraria o chamado e encaminharia.</div>
+    </div>
+
+    <div class="analogia">
+      <div class="al">💡 Analogia</div>
+      Técnico de manutenção = engenharia clínica. Helpdesk = triagem do pronto-socorro. Nenhum trata o "paciente" sozinho, mas sem os dois ninguém chega a quem trata.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 3 — DESENVOLVIMENTO E DADOS ===================== -->
+<div class="slide" data-chapter="3">
+  <div class="sc section-slide">
+    <span class="big-icon">💻</span>
+    <h1>Desenvolvimento <span class="dest">e dados</span></h1>
+    <p class="sub">Quem projeta a solução, garante o dado e desenha a arquitetura.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">CBO 212405 · 212305 · 212205</h3>
+    <h2>Projetar, <span class="dest">guardar</span> e arquitetar</h2>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🧠</span>
+        <h4>Analista de Desenvolvimento de Sistemas</h4>
+        <span class="cbo">CBO 212405</span>
+        <p>Especifica arquitetura, dimensiona requisitos, avalia riscos de entrega.</p>
+        <p class="valor">💎 Liga o problema de negócio à solução técnica.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🗄️</span>
+        <h4>Administrador de Banco de Dados (DBA)</h4>
+        <span class="cbo">CBO 212305</span>
+        <p>Modela, otimiza, garante disponibilidade e recuperação de desastre.</p>
+        <p class="valor">💎 Sem dado confiável, nenhum sistema tem valor.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏗️</span>
+        <h4>Engenheiro de Aplicativos em Computação</h4>
+        <span class="cbo">CBO 212205 · DevOps/ITIL/ágil</span>
+        <p>Arquitetura de alto nível; negocia a solução com o cliente.</p>
+        <p class="valor">💎 Traduz o objetivo do cliente em arquitetura viável.</p>
+      </div>
+    </div>
+
+    <div class="def">
+      <div class="dfl">📐 A diferença que cai em prova</div>
+      Programador executa uma especificação já pronta. Analista de Desenvolvimento <em>cria</em> essa especificação. É a diferença entre executar e desenhar um plano.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="3">
+  <div class="sc">
+    <h3 class="label">Exercício resolvido</h3>
+    <h2>Classificando um cargo na <span class="dest">cadeia de Porter</span></h2>
+
+    <div class="exerc">
+      <div class="exerc-t">📝 Enunciado</div>
+      <div class="exerc-e">Classifique o <strong>Engenheiro de Aplicativos</strong> na cadeia de valor para uma consultoria de TI que vende projetos de software a clientes externos.</div>
+      <div class="exerc-s"><b>Solução:</b> a atividade-fim da empresa é vender e entregar software — logo, é <strong>atividade primária</strong> (Operações, com forte componente de Vendas, já que o cargo negocia direto com o cliente). No departamento de TI de um banco, o mesmo cargo seria <strong>suporte</strong>: o cargo não muda, o valor estratégico muda com o produto da empresa.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 4 — INFRAESTRUTURA E SEGURANÇA ===================== -->
+<div class="slide" data-chapter="4">
+  <div class="sc section-slide">
+    <span class="big-icon">🌐</span>
+    <h1>Infraestrutura <span class="dest">e segurança</span></h1>
+    <p class="sub">O alicerce que só vira notícia quando falha.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="4">
+  <div class="sc">
+    <h3 class="label">CBO 212410 · 212310 · 212320</h3>
+    <h2>Planejar, operar e <span class="dest">proteger</span> a rede</h2>
+
+    <div class="three-col">
+      <div class="card">
+        <span class="card-icon">📡</span>
+        <h4>Analista de Redes e Com. de Dados</h4>
+        <span class="cbo">CBO 212410 · CCNA</span>
+        <p>Planeja redes, monitora data center, testa vulnerabilidades.</p>
+        <p class="valor">💎 Planeja a rede que vai existir.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔌</span>
+        <h4>Administrador de Redes</h4>
+        <span class="cbo">CBO 212310 · CCNP/MCSE</span>
+        <p>Implementa e mantém o que o Analista planejou.</p>
+        <p class="valor">💎 Mantém a rede no ar.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛡️</span>
+        <h4>Adm. em Segurança da Informação</h4>
+        <span class="cbo">CBO 212320 · ITIL/MCSO</span>
+        <p>Políticas de segurança, incidentes, forense, acesso.</p>
+        <p class="valor">💎 Protege do custo de um incidente.</p>
+      </div>
+    </div>
+
+    <div class="analogia">
+      <div class="al">💡 Um padrão que se repete</div>
+      "Analista" planeja, "Administrador" opera — o mesmo padrão do Capítulo 3 (Analista de Desenvolvimento × Programador). Quem desenha raramente é quem mantém.
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-q">Vazamento de dados de clientes: quem conduz a investigação forense?</div>
+      <div class="quiz-alts">
+        <div class="quiz-alt" onclick="marcar(this)">a) Administrador de Redes</div>
+        <div class="quiz-alt" data-ok="1" onclick="marcar(this)">b) Administrador em Segurança da Informação</div>
+        <div class="quiz-alt" onclick="marcar(this)">c) Analista de Redes e Com. de Dados</div>
+        <div class="quiz-alt" onclick="marcar(this)">d) Administrador de Banco de Dados</div>
+      </div>
+      <button class="quiz-btn" onclick="verResp(this)">Ver resposta</button>
+      <div class="quiz-r"><b>Resposta: (b).</b> Análise forense e políticas de segurança são atribuição específica desse cargo, mesmo acionando DBA e Adm. de Redes durante a investigação.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 5 — GESTÃO E LIDERANÇA ===================== -->
+<div class="slide" data-chapter="5">
+  <div class="sc section-slide">
+    <span class="big-icon">👔</span>
+    <h1>Gestão <span class="dest">e liderança</span></h1>
+    <p class="sub">Cargos que entregam prazo, custo, qualidade e pessoas — não um artefato técnico.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">CBO 142530 · 142510 · 142505</h3>
+    <h2>Três gerências, <span class="dest">três áreas</span></h2>
+
+    <div class="three-col">
+      <div class="card">
+        <span class="card-icon">🎧</span>
+        <h4>Gerente de Suporte Técnico de TI</h4>
+        <span class="cbo">CBO 142530 · ITIL/PMP</span>
+        <p>Processos, custos e indicadores do suporte.</p>
+        <p class="valor">💎 Garante o SLA dentro do orçamento.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💻</span>
+        <h4>Gerente de Desenvolvimento de Sistemas</h4>
+        <span class="cbo">CBO 142510 · COBIT/PMP</span>
+        <p>Headcount, cronograma e custo dos projetos de dev.</p>
+        <p class="valor">💎 Entrega o portfólio no prazo e qualidade.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌐</span>
+        <h4>Gerente de Rede</h4>
+        <span class="cbo">CBO 142505 · ITIL/CCNP</span>
+        <p>Capacidade, disponibilidade, orçamento CAPEX/OPEX.</p>
+        <p class="valor">💎 Infraestrutura sustenta o crescimento.</p>
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 O padrão dos três</div>
+      Nenhuma descrição fala em codificar ou configurar. Fala em gerenciar headcount, orçamento, metas — gestão muda a unidade de trabalho: de tarefa técnica para pessoas, prazo e dinheiro.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">CBO 142520 · destaque da disciplina</h3>
+    <h2>O <span class="dest">Gerente de Projetos</span> de TI</h2>
+
+    <table class="tbl">
+      <thead><tr><th>Atuação (Guia Brasscom)</th><th>Requisitos</th></tr></thead>
+      <tbody>
+        <tr><td>Conduz a equipe: agendas, itens de ação, resolução de problemas</td><td rowspan="4" style="vertical-align:top;"><strong>Formação:</strong> pós em Administração e TI<br><strong>Certificações:</strong> ITIL, <strong>PMP</strong>, metodologia ágil</td></tr>
+        <tr><td><strong>Gerencia riscos</strong>, documentação e relatórios de status</td></tr>
+        <tr><td>Estabelece a <strong>metodologia</strong> de gestão de projetos da empresa</td></tr>
+        <tr><td><strong>Garante entrega dentro de custo, prazo e qualidade</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sucesso">
+      <div class="sl">✅ Por que este cargo é o centro da disciplina</div>
+      Nenhuma atribuição é "escrever código" ou "configurar rede". Ele não substitui os outros 14 cargos — <strong>orquestra</strong> todos em torno de um objetivo com início, meio e fim.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="5">
+  <div class="sc">
+    <h3 class="label">CBO 123605</h3>
+    <h2>No topo: <span class="dest">Diretor de Serviços</span></h2>
+
+    <div class="items">
+      <div class="it"><span class="it-icon">💰</span><span>Orçamento da área conforme receita, custo e margem.</span></div>
+      <div class="it"><span class="it-icon">📊</span><span>Indicadores de produtividade e rentabilidade.</span></div>
+      <div class="it"><span class="it-icon">🤝</span><span>Relação com diretorias comerciais e parceiros externos.</span></div>
+      <div class="it"><span class="it-icon">🧭</span><span>Lidera equipes de projetos amplas, com clientes e terceiros.</span></div>
+    </div>
+
+    <div class="def">
+      <div class="dfl">📐 Gerente × Diretor</div>
+      O Gerente de Projetos garante que <em>um projeto</em> termine dentro do escopo. O Diretor garante que o <em>portfólio inteiro</em> esteja alinhado ao resultado financeiro. Um pensa em entrega; o outro, em margem.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 6 — TRILHAS E CERTIFICAÇÕES ===================== -->
+<div class="slide" data-chapter="6">
+  <div class="sc section-slide">
+    <span class="big-icon">🧭</span>
+    <h1>Trilhas de <span class="dest">carreira</span></h1>
+    <p class="sub">Do primeiro chamado de helpdesk à diretoria: como os 15 cargos se encadeiam.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="6">
+  <div class="sc">
+    <h3 class="label">A progressão do próprio Guia Brasscom</h3>
+    <h2>Cinco <span class="dest">degraus</span></h2>
+
+    <table class="tbl compacta">
+      <thead><tr><th>Degrau</th><th>Formação</th><th>Línguas</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Técnico</strong></td><td>Técnico em TI</td><td>Inglês iniciante</td><td>Manutenção, Helpdesk</td></tr>
+        <tr><td><strong>2. Analista/Adm.</strong></td><td>Graduação completa</td><td>Inglês intermediário</td><td>Suporte, DBA, Redes</td></tr>
+        <tr><td><strong>3. Engenheiro</strong></td><td>Graduação completa</td><td>Inglês avançado</td><td>Eng. de Aplicativos</td></tr>
+        <tr><td><strong>4. Gerente</strong></td><td>Graduação + Pós</td><td>Inglês avançado</td><td>Gerente de Projetos, Rede</td></tr>
+        <tr><td><strong>5. Diretor</strong></td><td>Pós em Administração</td><td>Inglês avançado</td><td>Diretor de Serviços</td></tr>
+      </tbody>
+    </table>
+
+    <div class="dica">
+      <div class="dl">💡 O padrão</div>
+      A cada degrau: menos "fazer", mais "decidir"; mais formação formal; mais peso do idioma estrangeiro.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="6">
+  <div class="sc">
+    <h3 class="label">Comportamento e certificações</h3>
+    <h2>Talento <span class="dest">social</span> e o "passaporte" técnico</h2>
+
+    <div class="vs">
+      <div class="vs-col">
+        <h4 style="color:var(--ac);">📊 Talento nos Negócios</h4>
+        <ul><li>Orientação Estratégica</li><li>Excelência na Execução</li><li>Avaliação e Decisão</li></ul>
+      </div>
+      <div class="vs-col">
+        <h4 style="color:var(--roxo);">🤝 Talento Social</h4>
+        <ul><li>Autoconfiança</li><li>Liderança</li><li>Impacto e Influência</li><li>Construção de Relacionamentos</li></ul>
+      </div>
+    </div>
+    <p class="txt-sm">Modelo de Ram Charan/Seema Sanghi. Só cargos de <strong>Gerência e Direção</strong> exigem Liderança — o divisor entre atuar e gerir.</p>
+
+    <table class="tbl compacta">
+      <thead><tr><th>Certificação</th><th>Aparece em</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">ITIL</td><td>Segurança, Suporte, Rede, Gerentes, Diretor</td></tr>
+        <tr><td class="mono">PMP</td><td>Gerente de Suporte, Sistemas, <strong>Projetos</strong>, Diretor</td></tr>
+        <tr><td class="mono">CCNA/CCNP</td><td>Redes, Segurança, Gerente de Rede</td></tr>
+        <tr><td class="mono">Ágil</td><td>Analista de Dev., Eng. de Aplicativos, <strong>Gerente de Projetos</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="txt-sm">ITIL + PMP + ágil — as três certificações do Gerente de Projetos de TI — são os três pilares que a ementa detalha a partir da próxima aula.</p>
+  </div>
+</div>
+
+<!-- ===================== CAP 7 — VALORES ASSOCIADOS ===================== -->
+<div class="slide" data-chapter="7">
+  <div class="sc section-slide">
+    <span class="big-icon">💰</span>
+    <h1>Valores <span class="dest">associados</span></h1>
+    <p class="sub">Dois sentidos: o que o cargo entrega ao projeto, e quanto o mercado paga por ele.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="7">
+  <div class="sc">
+    <h3 class="label">Sentido 1 — o que cada cargo entrega</h3>
+    <h2>Os 15 cargos na <span class="dest">cadeia de Porter</span></h2>
+
+    <table class="tbl compacta">
+      <thead><tr><th>Predominantemente…</th><th>Cargos</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Suporte — Infraestrutura</strong></td><td>Téc. de Manutenção, Adm. de Redes, Gerente de Rede, Diretor</td></tr>
+        <tr><td><strong>Suporte — Desenvolvimento</strong></td><td>Programador, Analista de Dev., DBA, Eng. de Aplicativos</td></tr>
+        <tr><td><strong>Primária — Pós-vendas</strong></td><td>Helpdesk, Analista de Suporte, Gerente de Suporte Técnico</td></tr>
+        <tr><td><strong>Atravessa toda a cadeia</strong></td><td><strong>Gerente de Projetos de TI</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="def">
+      <div class="dfl">📐 O valor do Gerente de Projetos</div>
+      A maioria dos cargos de TI é custo (suporte). O valor do Gerente de Projetos é transformar esse custo em resultado dentro do prazo — é por isso que a disciplina existe.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="7">
+  <div class="sc">
+    <h3 class="label">Sentido 2 — quanto o mercado paga</h3>
+    <h2>Tabela Salarial de TI <span class="dest">2026</span></h2>
+
+    <p class="txt-sm">Os 15 cargos do Guia Brasscom, por código <strong>CBO</strong>, no <strong>salario.com.br</strong> (dados CAGED, ago/2026).</p>
+
+    <table class="tbl compacta">
+      <thead><tr><th>Cargo</th><th class="num">Mediana</th><th class="num">Média</th><th class="num">Faixa</th></tr></thead>
+      <tbody>
+        <tr><td>Téc. Manutenção de Equipamentos <span class="src">313220</span></td><td class="num">2.352</td><td class="num">2.472</td><td class="num">1.960–2.614</td></tr>
+        <tr><td>Téc. Apoio ao Usuário / Helpdesk <span class="src">317210</span></td><td class="num">2.297</td><td class="num">2.531</td><td class="num">1.927–2.697</td></tr>
+        <tr><td>Programador de Sistemas <span class="src">317110</span></td><td class="num">5.158</td><td class="num">6.307</td><td class="num">3.090–8.588</td></tr>
+        <tr><td>Analista de Suporte Computacional <span class="src">212420</span></td><td class="num">2.989</td><td class="num">3.999</td><td class="num">2.352–4.330</td></tr>
+        <tr><td>Analista de Desenvolvimento de Sistemas <span class="src">212405</span></td><td class="num">7.800</td><td class="num">8.463</td><td class="num">4.593–11.141</td></tr>
+        <tr><td>Analista de Redes e Com. de Dados <span class="src">212410</span></td><td class="num">4.514</td><td class="num">5.939</td><td class="num">3.000–7.879</td></tr>
+        <tr><td>Adm. em Segurança da Informação <span class="src">212320</span></td><td class="num">6.745</td><td class="num">8.913</td><td class="num">3.871–12.000</td></tr>
+        <tr><td>Administrador de Redes <span class="src">212310</span></td><td class="num">4.575</td><td class="num">6.059</td><td class="num">2.900–7.979</td></tr>
+        <tr><td>Administrador de Banco de Dados <span class="src">212305</span></td><td class="num">9.000</td><td class="num">9.398</td><td class="num">5.953–12.500</td></tr>
+        <tr><td>Engenheiro de Aplicativos <span class="src">212205</span></td><td class="num">11.493</td><td class="num">13.589</td><td class="num">7.141–16.846</td></tr>
+        <tr><td>Gerente de Suporte Técnico de TI <span class="src">142530</span></td><td class="num">8.160</td><td class="num">10.183</td><td class="num">4.746–14.000</td></tr>
+        <tr><td>Gerente de Desenvolvimento de Sistemas <span class="src">142510</span></td><td class="num">18.000</td><td class="num">19.617</td><td class="num">12.851–25.000</td></tr>
+        <tr><td>Gerente de Rede <span class="src">142505</span></td><td class="num">10.545</td><td class="num">12.899</td><td class="num">4.508–28.606</td></tr>
+        <tr><td><strong>Gerente de Projetos de TI <span class="src">142520</span></strong></td><td class="num"><strong>12.360</strong></td><td class="num"><strong>13.920</strong></td><td class="num"><strong>8.613–27.589</strong></td></tr>
+        <tr><td>Diretor de Serviços de Informática <span class="src">123605</span></td><td class="num">39.623</td><td class="num">39.877</td><td class="num">24.985–71.977</td></tr>
+      </tbody>
+    </table>
+    <p class="txt-sm" style="color:var(--txt3);">Valores em R$/mês. Fonte: salario.com.br, dados CAGED consultados em ago/2026 — mediana/faixa variam com região, porte e amostra.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="7">
+  <div class="sc">
+    <h3 class="label">Explore você mesmo</h3>
+    <h2>Estimador de <span class="dest">faixa salarial</span></h2>
+
+    <div class="sim">
+      <div class="sim-cab">
+        <span class="sim-tit">🎮 Simulação</span>
+        <div class="sim-ctrl">
+          <span class="sim-lab">Cargo:</span>
+          <select id="valCargo" class="sim-in" onchange="valRender()"></select>
+        </div>
+      </div>
+      <div id="valBarras"></div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Como ler</div>
+      Mediana, média e teto da faixa do mesmo cargo — quanto mais larga a faixa, maior a variação real de mercado (região, porte, senioridade).
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 8 — APLICAÇÕES PRÁTICAS ===================== -->
+<div class="slide" data-chapter="8">
+  <div class="sc section-slide">
+    <span class="big-icon">🏢</span>
+    <h1>Aplicações <span class="dest">práticas</span></h1>
+    <p class="sub">Como os 15 cargos aparecem — ou somem — numa startup, numa média empresa e numa corporação.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">O mesmo cargo, contextos diferentes</h3>
+    <h2>Startup × <span class="dest">corporação</span></h2>
+
+    <div class="grid2">
+      <div class="card" style="max-width:none;">
+        <span class="card-icon">🚀</span>
+        <h4>Startup / pequena empresa</h4>
+        <p>Uma pessoa acumula Dev + Redes + parte do Suporte. "Gerente de Projetos" costuma ser o fundador ou o Tech Lead, sem cargo formal.</p>
+      </div>
+      <div class="card" style="max-width:none;">
+        <span class="card-icon">🏛️</span>
+        <h4>Corporação / grande empresa</h4>
+        <p>Os 15 cargos existem como posições formais, com <strong>PMO</strong> reunindo vários Gerentes de Projetos sob um Diretor.</p>
+      </div>
+    </div>
+
+    <table class="tbl compacta">
+      <thead><tr><th>Nome oficial (CBO)</th><th>Nomes equivalentes de mercado</th></tr></thead>
+      <tbody>
+        <tr><td>Engenheiro de Aplicativos</td><td>Arquiteto de Sistemas · Arquiteto de Soluções</td></tr>
+        <tr><td>Gerente de Projetos de TI</td><td>Gerente de Programas · Gerente de Projetos ITM</td></tr>
+        <tr><td>Diretor de Serviços de Informática</td><td>Diretor de Operações · Diretor de Contas</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="slide" data-chapter="8">
+  <div class="sc">
+    <h3 class="label">Checkpoint</h3>
+    <h2>Um nome de <span class="dest">mercado</span>, um cargo do guia</h2>
+
+    <div class="quiz">
+      <div class="quiz-q">Vaga anuncia "Arquiteto de Soluções, CCNA/ITIL/Ágil, negociação direta com cliente". Que cargo do Guia Brasscom é esse?</div>
+      <div class="quiz-alts">
+        <div class="quiz-alt" onclick="marcar(this)">a) Administrador de Redes</div>
+        <div class="quiz-alt" data-ok="1" onclick="marcar(this)">b) Engenheiro de Aplicativos em Computação</div>
+        <div class="quiz-alt" onclick="marcar(this)">c) Gerente de Rede</div>
+        <div class="quiz-alt" onclick="marcar(this)">d) Analista de Suporte Computacional</div>
+      </div>
+      <button class="quiz-btn" onclick="verResp(this)">Ver resposta</button>
+      <div class="quiz-r"><b>Resposta: (b).</b> "Arquiteto de Soluções" é a nomenclatura de mercado citada pelo próprio guia para este cargo.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 9 — EXERCÍCIOS ===================== -->
+<div class="slide" data-chapter="9">
+  <div class="sc section-slide">
+    <span class="big-icon">✍️</span>
+    <h1>Lista de <span class="dest">exercícios</span></h1>
+    <p class="sub">10 questões sobre gestão + 1 exercício discursivo de síntese. Responda por escrito antes da próxima aula.</p>
+  </div>
+</div>
+
+<div class="slide" data-chapter="9">
+  <div class="sc">
+    <h3 class="label">Questões 1 a 5</h3>
+    <h2>Cargos, <span class="dest">valor</span> e cadeia de Porter</h2>
+
+    <div class="notas">
+      <div class="nota"><span class="num">1</span><span><strong>(Discursiva)</strong> Diferencie <em>projeto</em> de <em>operação continuada</em>, usando dois cargos da aula como exemplo.</span></div>
+      <div class="nota"><span class="num">2</span><span><strong>(Múltipla escolha)</strong> Qual alternativa descreve melhor o Gerente de Projetos de TI?<span class="alt">a) Codifica conforme especificação · b) Garante entrega dentro de escopo, prazo, custo e qualidade, estruturando a equipe · c) Administra só o orçamento da diretoria · d) Faz suporte de nível 1</span></span></div>
+      <div class="nota"><span class="num">3</span><span><strong>(Discursiva)</strong> Quais atividades de TI tendem a ser "suporte" e quais podem virar "primárias"? Dê um exemplo de empresa em que dev. de sistemas é atividade primária.</span></div>
+      <div class="nota"><span class="num">4</span><span><strong>(Múltipla escolha)</strong> Escopo constante, prazo reduzido pela metade: efeito mais provável?<span class="alt">a) Nenhum, são independentes · b) Custo sobe ou qualidade cai · c) Escopo aumenta automaticamente · d) A equipe deve ser reduzida</span></span></div>
+      <div class="nota"><span class="num">5</span><span><strong>(Discursiva)</strong> Compare dois cargos técnicos quanto a formação exigida e autonomia de decisão. O que isso sugere sobre a progressão de carreira em TI?</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="9">
+  <div class="sc">
+    <h3 class="label">Questões 6 a 10</h3>
+    <h2>Dados de mercado, <span class="dest">risco</span> e pesquisa</h2>
+
+    <div class="notas">
+      <div class="nota"><span class="num">6</span><span><strong>(Múltipla escolha)</strong> Uma faixa salarial larga (ex.: Gerente de Rede, R$4.508–28.606) é evidência de quê?<span class="alt">a) Erro na tabela · b) Grande variação real por região, porte e senioridade — número isolado não representa o mercado · c) O cargo não existe · d) Só fontes internacionais são confiáveis</span></span></div>
+      <div class="nota"><span class="num">7</span><span><strong>(Discursiva)</strong> Escolha um cargo de gestão e explique, em até cinco linhas, o risco de ele não existir ou não ser bem exercido.</span></div>
+      <div class="nota"><span class="num">8</span><span><strong>(Múltipla escolha)</strong> Do modelo Ram Charan/Sanghi, quais pertencem a "Talento Social"?<span class="alt">a) Orientação Estratégica e Avaliação e Decisão · b) Excelência na Execução e Avaliação e Decisão · c) Liderança, Impacto e Influência e Construção de Relacionamentos · d) Nenhuma — todas são "Talento nos Negócios"</span></span></div>
+      <div class="nota"><span class="num">9</span><span><strong>(Discursiva)</strong> Cliente muda requisitos toda semana. Que risco isso representa, e por que abertura/encerramento formal do projeto — tema da próxima aula — ajuda a reduzi-lo?</span></div>
+      <div class="nota"><span class="num">10</span><span><strong>(Pesquisa)</strong> Procure um anúncio real de vaga para um dos 15 cargos. Compare com o Guia Brasscom (2017): o que mudou, o que permaneceu?</span></div>
+    </div>
+
+    <button class="quiz-btn" onclick="toggleGab()">Ver gabarito (múltipla escolha)</button>
+    <div class="quiz-r" id="gabBox" style="background:var(--bg-dest);border:1px solid var(--ac);border-radius:var(--rad);padding:8px 12px;margin-top:6px;">
+      <b>2.</b> b &nbsp;·&nbsp; <b>4.</b> b &nbsp;·&nbsp; <b>6.</b> b &nbsp;·&nbsp; <b>8.</b> c. Discursivas (1, 3, 5, 7, 9, 10) sem resposta única.
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-chapter="9">
+  <div class="sc">
+    <h3 class="label">Questão 11 · exercício discursivo (síntese)</h3>
+    <h2>Monte a equipe de um <span class="dest">projeto real</span></h2>
+
+    <div class="exerc">
+      <div class="exerc-t">📝 Enunciado</div>
+      <div class="exerc-e">
+        Você foi contratado como <strong>Gerente de Projetos de TI</strong> para liderar a criação de um aplicativo de delivery para uma pequena rede de restaurantes — uma startup enxuta, com no máximo 8 pessoas na equipe de tecnologia. Com base nos 15 cargos do Guia Brasscom vistos nesta aula, escreva um texto respondendo:
+      </div>
+      <div class="exerc-s">
+        <b>a)</b> Escolha 4 a 5 cargos para contratar primeiro e justifique cada escolha pelo <em>valor</em> que o cargo agrega ao projeto (Capítulos 2 a 5).<br>
+        <b>b)</b> Posicione cada cargo escolhido na cadeia de valor de Porter — suporte ou atividade primária — considerando que o produto da empresa <em>é</em> o próprio aplicativo (Capítulos 1 e 7).<br>
+        <b>c)</b> Usando a Tabela Salarial de TI 2026 (Capítulo 7), estime o custo mensal aproximado dessa equipe, com a mediana de cada cargo escolhido.<br>
+        <b>d)</b> Você, Gerente de Projetos, não está entre "quem programa". Justifique por que, mesmo assim, seu cargo é necessário nessa equipe enxuta — qual é exatamente o seu valor?
+      </div>
+    </div>
+
+    <div class="dica">
+      <div class="dl">💡 Como será avaliado</div>
+      Não existe uma equipe "certa" — a nota está na <strong>justificativa</strong>: cada escolha precisa se apoiar no valor do cargo (não só no nome), e a estimativa de custo precisa citar os números da tabela do Capítulo 7. Texto de 15 a 25 linhas.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 10 — RESUMO ===================== -->
+<div class="slide" data-chapter="10">
+  <div class="sc">
+    <h3 class="label">Resumo</h3>
+    <h2>O que <span class="dest">leva desta aula</span></h2>
+
+    <div class="resumo">
+      <div class="res-i"><span class="rn">1</span><span>TI tem <strong>15 funções formalmente mapeadas</strong> (Brasscom), em cinco degraus de carreira.</span></div>
+      <div class="res-i"><span class="rn">2</span><span>A <strong>cadeia de valor de Porter</strong> classifica cargos como suporte ou primária — muda com o produto da empresa.</span></div>
+      <div class="res-i"><span class="rn">3</span><span>O valor do <strong>Gerente de Projetos</strong> é único: não entrega artefato técnico, entrega o projeto concluído.</span></div>
+      <div class="res-i"><span class="rn">4</span><span>Habilidades mudam com o degrau: Execução (técnico) → Liderança e Influência (gestão).</span></div>
+      <div class="res-i"><span class="rn">5</span><span><strong>ITIL + PMP + ágil</strong> aparecem juntas no Gerente de Projetos — os pilares da disciplina.</span></div>
+      <div class="res-i"><span class="rn">6</span><span>A <strong>Tabela Salarial de TI 2026</strong> mostra faixas largas: leia sempre como faixa, nunca número único.</span></div>
+      <div class="res-i"><span class="rn">7</span><span>Próxima aula: item 1 da ementa — conceitos introdutórios da gestão de projetos.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CAP 11 — REFERÊNCIAS ===================== -->
+<div class="slide" data-chapter="11">
+  <div class="sc">
+    <h3 class="label">Referências</h3>
+    <h2>Fontes usadas <span class="dest">nesta aula</span></h2>
+
+    <ul class="refs">
+      <li><b>BRASSCOM.</b> <i>Guia de Funções de Tecnologia da Informação e Comunicação no Brasil.</i> 2ª ed., 2017. — fonte dos 15 cargos, CBOs, cadeia de valor (Porter) e modelo comportamental (Ram Charan/Sanghi). <span class="fonte">Material/brasscom-guia_de_funcoes_de_tic_2a_edicao-2017.pdf</span></li>
+      <li><b>Portal Salário.</b> <i>Tabela Salarial — Tecnologia da Informação 2026.</i> Dados CAGED, consultado ago/2026. <span class="fonte">salario.com.br/tabela-salarial/tecnologia-da-informacao</span></li>
+    </ul>
+
+    <div class="erro">
+      <div class="el">⚠️ Nota de transparência</div>
+      O Portal Salário é um agregador de mercado (CAGED), não está arquivado em <code>Material/</code> e muda com o tempo — use como ordem de grandeza. O Guia Brasscom, por sua vez, já está salvo em <code>Material/</code>.
+    </div>
+
+    <h4 style="margin-top:5px;">📚 Bibliografia da ementa (próximas aulas)</h4>
+    <ul class="refs">
+      <li><b>KERZNER, H. R.</b> <i>Gestão de Projetos: As Melhores Práticas.</i> Bookman, 2017.</li>
+      <li><b>PRESSMAN, R.; MAXIM, B.</b> <i>Engenharia de Software.</i> AMGH, 2016.</li>
+      <li><b>SOMMERVILLE, I.</b> <i>Engenharia de Software.</i> Pearson, 2019.</li>
+      <li><b>PMI.</b> <i>PMBOK Guide.</i> Em português.</li>
+    </ul>
+
+    <p class="txt-sm" style="margin-top:5px;color:var(--txt3);text-align:center;">Prof. Bonfim Aquino — IFRN — Gerência de Projetos — TADS — 2026.2</p>
+  </div>
+</div>
+
+</div><!-- /slides-area -->
+
+<div class="nav-arrows">
+  <button class="nav-btn" id="btnPrev" title="Slide anterior (←)">&#8592;</button>
+  <button class="nav-btn" id="btnNext" title="Próximo slide (→)">&#8594;</button>
+</div>
+
+<div class="chapter-indicator">
+  <div class="chapter-dots" id="chapterDots"></div>
+</div>
+
+<script>
+const slides  = document.querySelectorAll('.slide'),
+      navs    = document.querySelectorAll('.nav-item'),
+      ctr     = document.getElementById('counter'),
+      fill    = document.getElementById('fill'),
+      btnPrev = document.getElementById('btnPrev'),
+      btnNext = document.getElementById('btnNext'),
+      dotsCtn = document.getElementById('chapterDots');
+
+let cur = 0;
+const total = slides.length;
+
+const chapterMap = {};
+slides.forEach((s, i) => {
+  const ch = s.dataset.chapter;
+  if (!chapterMap[ch]) chapterMap[ch] = [];
+  chapterMap[ch].push(i);
+});
+
+navs.forEach(nav => {
+  const ch = nav.dataset.chapter;
+  const badge = nav.querySelector('.sub-count');
+  if (badge && chapterMap[ch]) {
+    const count = chapterMap[ch].length;
+    badge.textContent = count > 1 ? count : '';
+  }
+});
+
+function renderDots() {
+  const ch = slides[cur].dataset.chapter;
+  const indices = chapterMap[ch] || [];
+  dotsCtn.innerHTML = '';
+  if (indices.length <= 1) { dotsCtn.parentElement.style.opacity = '0'; return; }
+  dotsCtn.parentElement.style.opacity = '1';
+  const pos = indices.indexOf(cur);
+  const lbl = document.createElement('span');
+  lbl.className = 'ch-label';
+  lbl.textContent = (pos + 1) + '/' + indices.length;
+  dotsCtn.appendChild(lbl);
+  indices.forEach((slideIdx, dotIdx) => {
+    const dot = document.createElement('span');
+    dot.className = 'ch-dot' + (slideIdx === cur ? ' active' : '');
+    dot.title = 'Slide ' + (dotIdx + 1) + ' de ' + indices.length;
+    dot.addEventListener('click', () => go(slideIdx));
+    dotsCtn.appendChild(dot);
+  });
+}
+
+function updateArrows() {
+  btnPrev.classList.toggle('disabled', cur === 0);
+  btnNext.classList.toggle('disabled', cur === total - 1);
+}
+
+function go(n) {
+  if (n < 0 || n >= total) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  ctr.textContent = (cur + 1) + '/' + total;
+  fill.style.width = ((cur + 1) / total * 100) + '%';
+  const ch = slides[cur].dataset.chapter;
+  navs.forEach(v => { v.classList.toggle('active', v.dataset.chapter === ch); });
+  slides[cur].scrollTop = 0;
+  renderDots();
+  updateArrows();
+}
+
+function goTo(ch) {
+  for (let i = 0; i < total; i++) {
+    if (slides[i].dataset.chapter == ch) { go(i); return; }
+  }
+}
+
+btnPrev.addEventListener('click', () => go(cur - 1));
+btnNext.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+  if (e.key === 'ArrowLeft') go(cur - 1);
+  if (e.key === 'Home') go(0);
+  if (e.key === 'End') go(total - 1);
+});
+
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const d = e.changedTouches[0].clientX - tx;
+  if (d < -50) go(cur + 1);
+  if (d > 50) go(cur - 1);
+});
+
+/* ---- Helpers didáticos ---- */
+function verResp(btn) {
+  const box = btn.closest('.quiz').querySelector('.quiz-r');
+  box.classList.toggle('show');
+  btn.textContent = box.classList.contains('show') ? 'Esconder resposta' : 'Ver resposta';
+}
+
+function marcar(el) {
+  el.classList.add(el.dataset.ok === '1' ? 'ok' : 'no');
+  if (el.dataset.ok === '1') {
+    el.closest('.quiz').querySelectorAll('.quiz-alt').forEach(a => {
+      if (a !== el && a.dataset.ok !== '1') a.classList.add('no');
+    });
+  }
+}
+
+function toggleGab() {
+  const box = document.getElementById('gabBox');
+  box.classList.toggle('show');
+  box.style.display = box.classList.contains('show') ? 'block' : 'none';
+  event.target.textContent = box.classList.contains('show') ? 'Esconder gabarito' : 'Ver gabarito (múltipla escolha)';
+}
+document.getElementById('gabBox').style.display = 'none';
+
+go(0);
+</script>
+
+<!-- =====================================================================
+     ESTIMADOR DE FAIXA SALARIAL — Cap. 7
+     Fonte única: salario.com.br, Tabela Salarial de TI 2026 (dados CAGED,
+     consultado em ago/2026), com CBO batendo exatamente com os 15 cargos
+     do Guia Brasscom. Nada nesta tabela é inventado ou estimado.
+     ===================================================================== */
+<script>
+const VAL_DADOS = [
+  { nome: "Técnico em Manutenção de Equipamentos (313220)", mediana: 2352,  media: 2471.75,  max: 2614 },
+  { nome: "Técnico de Apoio ao Usuário / Helpdesk (317210)", mediana: 2297,  media: 2531.02,  max: 2697 },
+  { nome: "Programador de Sistemas (317110)",                mediana: 5158,  media: 6306.84,  max: 8588 },
+  { nome: "Analista de Suporte Computacional (212420)",      mediana: 2989.19, media: 3999.25, max: 4330 },
+  { nome: "Analista de Desenvolvimento de Sistemas (212405)",mediana: 7800,  media: 8463.28,  max: 11141 },
+  { nome: "Analista de Redes e Com. de Dados (212410)",      mediana: 4513.64, media: 5939.03, max: 7879 },
+  { nome: "Adm. em Segurança da Informação (212320)",        mediana: 6745,  media: 8913.42,  max: 12000 },
+  { nome: "Administrador de Redes (212310)",                 mediana: 4575,  media: 6058.96,  max: 7978.95 },
+  { nome: "Administrador de Banco de Dados (212305)",        mediana: 9000,  media: 9398.16,  max: 12500 },
+  { nome: "Engenheiro de Aplicativos (212205)",               mediana: 11493.11, media: 13589.20, max: 16845.61 },
+  { nome: "Gerente de Suporte Técnico de TI (142530)",       mediana: 8160,  media: 10183.13, max: 14000 },
+  { nome: "Gerente de Desenvolvimento de Sistemas (142510)", mediana: 18000, media: 19616.60, max: 25000 },
+  { nome: "Gerente de Rede (142505)",                        mediana: 10545, media: 12898.87, max: 28606.38 },
+  { nome: "Gerente de Projetos de TI (142520)",               mediana: 12360, media: 13919.54, max: 27588.75 },
+  { nome: "Diretor de Serviços de Informática (123605)",     mediana: 39623, media: 39877.08, max: 71977.27 }
+];
+
+function valPopula() {
+  const sel = document.getElementById('valCargo');
+  VAL_DADOS.forEach((d, i) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = d.nome;
+    sel.appendChild(opt);
+  });
+  sel.value = 13; /* Gerente de Projetos de TI */
+}
+
+function valFmt(n) {
+  return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+}
+
+function valBarra(rotulo, valor, teto) {
+  const pct = Math.min(100, (valor / teto) * 100);
+  return '<div class="barra"><span class="bn">' + rotulo + '</span>' +
+         '<span class="bw"><span class="bf" style="width:' + pct.toFixed(1) + '%;"></span></span>' +
+         '<span class="bp">' + valFmt(valor) + '</span></div>';
+}
+
+function valRender() {
+  const d = VAL_DADOS[document.getElementById('valCargo').value];
+  const teto = d.max * 1.05;
+  let html = '';
+  html += valBarra('Mediana', d.mediana, teto);
+  html += valBarra('Média', d.media, teto);
+  html += valBarra('Teto da faixa', d.max, teto);
+  document.getElementById('valBarras').innerHTML = html;
+}
+
+valPopula();
+valRender();
+</script>
+</body>
+</html>
