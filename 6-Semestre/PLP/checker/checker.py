@@ -19,20 +19,16 @@ def get_type(t):
             raise TypeError(f"Tipo desconhecido: {t.data}")
 
 
-def check_types(t, escopo):
+def check_types(t: Tree, escopo: dict):
     match t.data:
 
-        # ---------------------------------------
         # Programa
-        # ---------------------------------------
 
         case "start":
             for stmt in t.children:
                 check_types(stmt, escopo)
 
-        # ---------------------------------------
         # Literais
-        # ---------------------------------------
 
         case "int_lit":
             return "int"
@@ -46,9 +42,7 @@ def check_types(t, escopo):
         case "true_lit" | "false_lit":
             return "bool"
 
-        # ---------------------------------------
         # Variável
-        # ---------------------------------------
 
         case "var":
             nome = str(t.children[0])
@@ -60,10 +54,8 @@ def check_types(t, escopo):
 
             return escopo[nome]
 
-        # ---------------------------------------
         # Declaração
         # var x: int = 10;
-        # ---------------------------------------
 
         case "var_decl":
             nome = str(t.children[0])
@@ -85,10 +77,8 @@ def check_types(t, escopo):
 
             return tipo_declarado
 
-        # ---------------------------------------
         # Atribuição
         # x = 10;
-        # ---------------------------------------
 
         case "assign":
             nome = str(t.children[0])
@@ -113,10 +103,8 @@ def check_types(t, escopo):
 
             return tipo_variavel
 
-        # ---------------------------------------
         # Aritmética
         # + - * /
-        # ---------------------------------------
 
         case "arith":
             tipo_esquerda = check_types(
@@ -149,10 +137,8 @@ def check_types(t, escopo):
 
             return tipo_esquerda
 
-        # ---------------------------------------
         # Comparação
         # == < >
-        # ---------------------------------------
 
         case "compare":
             tipo_esquerda = check_types(
@@ -173,9 +159,7 @@ def check_types(t, escopo):
 
             return "bool"
 
-        # ---------------------------------------
         # AND
-        # ---------------------------------------
 
         case "and_":
             tipo_esquerda = check_types(
@@ -202,9 +186,7 @@ def check_types(t, escopo):
 
             return "bool"
 
-        # ---------------------------------------
         # OR
-        # ---------------------------------------
 
         case "or_":
             tipo_esquerda = check_types(
@@ -231,9 +213,7 @@ def check_types(t, escopo):
 
             return "bool"
 
-        # ---------------------------------------
         # NOT
-        # ---------------------------------------
 
         case "not_":
             tipo = check_types(
@@ -241,7 +221,7 @@ def check_types(t, escopo):
                 escopo
             )
 
-            if tipo not in "bool":
+            if tipo != "bool":
                 raise TypeError(
                     f"Tipo esperado: 'bool', "
                     f"encontrado: '{tipo}'"
@@ -249,9 +229,7 @@ def check_types(t, escopo):
 
             return "bool"
 
-        # ---------------------------------------
         # IF
-        # ---------------------------------------
 
         case "if_stmt":
             tipo_condicao = check_types(
@@ -276,9 +254,7 @@ def check_types(t, escopo):
                     escopo.copy()
                 )
 
-        # ---------------------------------------
         # WHILE
-        # ---------------------------------------
 
         case "while_stmt":
             tipo_condicao = check_types(
@@ -297,17 +273,13 @@ def check_types(t, escopo):
                 escopo.copy()
             )
 
-        # ---------------------------------------
         # Bloco
-        # ---------------------------------------
 
         case "block":
             for stmt in t.children:
                 check_types(stmt, escopo)
 
-        # ---------------------------------------
         # Print
-        # ---------------------------------------
 
         case "print_stmt":
             check_types(
@@ -315,9 +287,7 @@ def check_types(t, escopo):
                 escopo
             )
 
-        # ---------------------------------------
         # Função
-        # ---------------------------------------
 
         case "func_decl":
             nome = str(t.children[0])
@@ -371,9 +341,7 @@ def check_types(t, escopo):
                 escopo_funcao
             )
 
-        # ---------------------------------------
         # Return
-        # ---------------------------------------
 
         case "return_stmt":
             if "__return_type__" not in escopo:
@@ -396,9 +364,7 @@ def check_types(t, escopo):
 
             return tipo_encontrado
 
-        # ---------------------------------------
         # Chamada de função
-        # ---------------------------------------
 
         case "call":
             nome = str(t.children[0])
