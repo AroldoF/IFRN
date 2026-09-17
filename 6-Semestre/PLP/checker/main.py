@@ -36,14 +36,16 @@ type: "int" -> t_int
 ?expr3: expr3 ("=="|"<"|">") expr4 -> compare
        | expr4
 
-?expr4: expr4 ("+"|"-") expr5 -> arith
-       | expr5
+?expr4: expr4 "+" expr5 -> add
+      | expr4 "-" expr5 -> sub
+      | expr5
 
-?expr5: expr5 ("*"|"/") atom -> arith
-       | atom
+?expr5: expr5 "*" atom -> mul
+      | expr5 "/" atom -> div
+      | atom
 
-?atom: NUMBER -> int_lit
-     | FLOAT -> float_lit
+?atom: FLOAT -> float_lit
+     | NUMBER -> int_lit
      | STRING -> string_lit
      | "true" -> true_lit
      | "false" -> false_lit

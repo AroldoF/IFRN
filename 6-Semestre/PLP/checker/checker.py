@@ -55,7 +55,6 @@ def check_types(t: Tree, escopo: dict):
             return escopo[nome]
 
         # Declaração
-        # var x: int = 10;
 
         case "var_decl":
             nome = str(t.children[0])
@@ -78,7 +77,6 @@ def check_types(t: Tree, escopo: dict):
             return tipo_declarado
 
         # Atribuição
-        # x = 10;
 
         case "assign":
             nome = str(t.children[0])
@@ -104,9 +102,8 @@ def check_types(t: Tree, escopo: dict):
             return tipo_variavel
 
         # Aritmética
-        # + - * /
 
-        case "arith":
+        case "add":
             tipo_esquerda = check_types(
                 t.children[0],
                 escopo
@@ -117,28 +114,77 @@ def check_types(t: Tree, escopo: dict):
                 escopo
             )
 
-            if tipo_esquerda not in ("int", "float", "string"):
-                raise TypeError(
-                    f"Tipo esperado: 'int' ou 'float' ou 'string', "
-                    f"encontrado: '{tipo_esquerda}'"
-                )
+            # int + int
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "int"
+            ):
+                return "int"
 
-            if tipo_direita not in ("int", "float", "string"):
-                raise TypeError(
-                    f"Tipo esperado: 'int' ou 'float' ou string, "
-                    f"encontrado: '{tipo_direita}'"
-                )
+            # float + float
+            if (
+                tipo_esquerda == "float"
+                and tipo_direita == "float"
+            ):
+                return "float"
 
-            if tipo_esquerda != tipo_direita:
-                raise TypeError(
-                    f"Tipos incompatíveis: "
-                    f"'{tipo_esquerda}' e '{tipo_direita}'"
-                )
+            # int + float
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "float"
+            ):
+                return "float"
 
-            return tipo_esquerda
+            # string + string
+            if (
+                tipo_esquerda == "string"
+                and tipo_direita == "string"
+            ):
+                return "string"
+
+            raise TypeError(
+                f"Tipos incompatíveis para '+': "
+                f"'{tipo_esquerda}' e '{tipo_direita}'"
+            )
+
+        case "sub" | "mul" | "div":
+            tipo_esquerda = check_types(
+                t.children[0],
+                escopo
+            )
+
+            tipo_direita = check_types(
+                t.children[1],
+                escopo
+            )
+
+            # int op int
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "int"
+            ):
+                return "int"
+
+            # float op float
+            if (
+                tipo_esquerda == "float"
+                and tipo_direita == "float"
+            ):
+                return "float"
+
+            # int op float
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "float"
+            ):
+                return "float"
+
+            raise TypeError(
+                f"Tipos incompatíveis para '{t.data}': "
+                f"'{tipo_esquerda}' e '{tipo_direita}'"
+            )
 
         # Comparação
-        # == < >
 
         case "compare":
             tipo_esquerda = check_types(
@@ -151,13 +197,31 @@ def check_types(t: Tree, escopo: dict):
                 escopo
             )
 
-            if tipo_esquerda != tipo_direita:
-                raise TypeError(
-                    f"Tipos incompatíveis na comparação: "
-                    f"'{tipo_esquerda}' e '{tipo_direita}'"
-                )
+            # int == int, int < int, int > int
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "int"
+            ):
+                return "bool"
 
-            return "bool"
+            # float == float, float < float, float > float
+            if (
+                tipo_esquerda == "float"
+                and tipo_direita == "float"
+            ):
+                return "bool"
+
+            # int < float, int > float, int == float
+            if (
+                tipo_esquerda == "int"
+                and tipo_direita == "float"
+            ):
+                return "bool"
+
+            raise TypeError(
+                f"Tipos incompatíveis na comparação: "
+                f"'{tipo_esquerda}' e '{tipo_direita}'"
+            )
 
         # AND
 
@@ -316,9 +380,6 @@ def check_types(t: Tree, escopo: dict):
 
             bloco = t.children[indice]
 
-            # Registra a função antes de verificar
-            # o corpo. Isso permite recursão.
-
             if "__funcoes__" not in escopo:
                 escopo["__funcoes__"] = {}
 
@@ -326,8 +387,6 @@ def check_types(t: Tree, escopo: dict):
                 "params": parametros,
                 "return": tipo_retorno
             }
-
-            # Escopo da função
 
             escopo_funcao = escopo.copy()
 
